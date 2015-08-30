@@ -105,12 +105,25 @@ mean(x)
 #' 
 #' ---- 
 #' 
+#' ### Solution
+## ------------------------------------------------------------------------
+y=c(3,6,12,89)
+mean(y)
+
+#or
+mean(c(3,6,12,89))
+
+#' 
+#' ----
+#' 
 #' Writing functions in R is pretty easy.  Let's create one to calculate the mean of a vector by getting the sum and length.  First think about how to break it down into parts:
 ## ------------------------------------------------------------------------
 x1= sum(x)
 x2=length(x)
 x1/x2
 
+#' 
+#' ----
 #' 
 #' Then put it all back together and create a new function called `mymean`:
 ## ------------------------------------------------------------------------
@@ -121,18 +134,30 @@ mymean=function(f){
 mymean(f=x)
 
 #' 
+#' Confirm it works:
+## ------------------------------------------------------------------------
+mean(x)
+
+#' 
+#' > Any potential problems with the `mymean` function?
+#' 
 #' ----
 #' 
 #' ### Missing data:  dealing with `NA` values
-#' But, that simple function would be vulnerable to potential problems (such as missing data).  
-#' 
 ## ------------------------------------------------------------------------
 x3=c(5,8,NA,91,3,NA,14,30,100)
 
-## Calculate the mean using the new function
+#' 
+#' > What do you think `mymean(x3)` will return?
+#' 
+#' ----
+#' 
+#' Calculate the mean using the new function
+## ------------------------------------------------------------------------
 mymean(x3)
 
-## Use the built-in function (with and without na.rm=T)
+#' Use the built-in function (with and without na.rm=T)
+## ------------------------------------------------------------------------
 mean(x3)
 mean(x3,na.rm=T)
 
@@ -151,18 +176,50 @@ mean(x3,na.rm=T)
  
   x3 >   15
 
-sum(x3>15,na.rm=T)
-
 #' 
 #' ----
 #' 
-#' And of course you can save the results as variables:
+#' And you can perform operations on those results:
+## ------------------------------------------------------------------------
+sum(x3>15,na.rm=T)
+
+#' 
+#' or save the results as variables:
 ## ------------------------------------------------------------------------
 result =  x3 >  3
 result
 
 #' 
 #' > Try this:  define a function that counts how many values in a vector are less than or equal to 12
+#' 
+#' ----
+#' 
+## ------------------------------------------------------------------------
+mycount=function(x){
+  sum(x<=12)
+}
+
+#' Try it:
+## ------------------------------------------------------------------------
+x3
+mycount(x3)
+
+#' oops!
+#' 
+#' ----
+#' 
+## ------------------------------------------------------------------------
+mycount=function(x){
+  sum(x<=12,na.rm=T)
+}
+
+#' Try it:
+## ------------------------------------------------------------------------
+x3
+mycount(x3)
+
+#' 
+#' Nice!
 #' 
 #' ----
 #' 
@@ -176,10 +233,16 @@ seq(from=0, to=1, by=0.25)
 #' 
 ## ------------------------------------------------------------------------
 a=rnorm(100,mean=0,sd=10)
-## illustrate with a histogram
+
+#' 
+#' ----
+#' 
+#' Let's visualize those values in a histogram:
+## ----fig.height=3--------------------------------------------------------
 hist(a)
 
 #' 
+#' We'll cover much more sophisticated graphics later...
 #' 
 #' ## Matrices
 #' You can also use matrices (2-dimensional arrays of numbers):
@@ -188,13 +251,19 @@ y=matrix(1:30,ncol=5)
 y
 
 #' 
-#' Which behave much like vectors:
+#' ----
+#' 
+#' Matrices behave much like vectors:
 ## ------------------------------------------------------------------------
+y
 y+2
 
 #' 
+#' ----
+#' 
 #' and have 2-dimensional indexing:
 ## ------------------------------------------------------------------------
+y
 y[2,3]
 
 #' 
@@ -207,6 +276,11 @@ data = data.frame( x = c(11,12,14),
                    z = c(10,9,7))
 data
 
+#' 
+#' ----
+#' 
+#' You can subset in several ways
+## ------------------------------------------------------------------------
 mean(data$z)
 
 mean(data[["z"]])
@@ -216,8 +290,9 @@ mean(data[,3])
 #' 
 #' ## Loading Packages
 #' 
-#' One of the best things about 
-#' To load a package, you can simply type `library(package)` where `package` is the name of the package you want to load.  However, this only works for packages that you already have installed on your system.  To install new packages, you can use `install.packages()` or use the package manager. 
+#' For installed packages:  `library(packagename)`.
+#' 
+#' New packages: `install.packages()` or use the package manager. 
 #' 
 ## ----message=F,warning=FALSE---------------------------------------------
 library(raster)
@@ -226,5 +301,5 @@ library(raster)
 #' > R may ask you to choose a CRAN mirror. CRAN is the distributed network of servers that provides access to R's software.  It doesn't really matter which you chose, but closer ones are likely to be faster.  From RStudio, you can select the mirror under Tools→Options or just wait until it asks you.
 #' 
 #' 
-#' If you don't have the packages above, install them in the package manager or by running `install.packages("raster")` (or use the package manager). 
+#' If you don't have the packages above, install them in the package manager or by running `install.packages("raster")`.
 #' 
