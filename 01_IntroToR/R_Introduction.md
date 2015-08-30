@@ -1,22 +1,12 @@
 # Introduction to R
 Adam M. Wilson  
-February 17, 2015  
+August 31, 2015  
     
 
 
 
 
-----
-
-This script is available:
-
-  * [SpatialAnalysisTutorials repository](http://github.com/adammwilson/SpatialAnalysisTutorials/blob/master/R_Introduction)
-  * Plain text (.R) with commented text 
-  [here](https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/R_Introduction/R_Introduction.R)
- 
-
 ## Variables
-
 
 ```r
 x=1
@@ -38,6 +28,7 @@ x
 ```
 ## [1]  5  8 14 91  3 36 14 30
 ```
+
 ----
 
 And do simple arithmetic:
@@ -63,15 +54,24 @@ X
 ### Variable naming conventions
 Naming your variables is your business, but there are [5 conventions](http://www.r-bloggers.com/consistent-naming-conventions-in-r/) to be aware of:
 
-* alllowercase: _e.g._ `adjustcolor`
-* period.separated: _e.g._ `plot.new`
-* underscore_separated: _e.g._ `numeric_version`
-* lowerCamelCase: _e.g._ `addTaskCallback`
-* UpperCamelCase: _e.g._ `SignatureMethod`
+* **alllowercase**: _e.g._ `adjustcolor`
+* **period.separated**: _e.g._ `plot.new`
+* **underscore_separated**: _e.g._ `numeric_version`
+* **lowerCamelCase**: _e.g._ `addTaskCallback`
+* **UpperCamelCase**: _e.g._ `SignatureMethod`
 
 ----
 
 ### Subsetting
+
+```r
+x
+```
+
+```
+## [1]  5  8 14 91  3 36 14 30
+```
+
 Subset the vector using `x[ ]` notation
 
 ```r
@@ -127,7 +127,9 @@ mean(x)
 
 ----
 
-Type `?functionname` to learn more about a function, e.g. `?mean`.  In RStudio, you can also search in the help panel.  There are other arguments too: `mean(x, trim = 0, na.rm = FALSE, ...)`
+Type `?functionname` to get the documentation (`?mean`) or `??"search parameters` (??"standard deviation") to search the documentation.  In RStudio, you can also search in the help panel.  `mean` has other arguments too: 
+
+`mean(x, trim = 0, na.rm = FALSE, ...)`
 
 In RStudio, if you press `TAB` after a function name (such as `mean( `), it will show function arguments.
 
@@ -136,28 +138,41 @@ In RStudio, if you press `TAB` after a function name (such as `mean( `), it will
 [pic1]: img/autocomplete.png "Autocomplete Screenshot"
 
 
-> Try to calculate the mean of `c(3,6,12,89)`.    
+> Calculate the standard deviation of `c(3,6,12,89)`.    
 
 ---- 
 
-### Solution
+### Standard Deviation
 
 ```r
 y=c(3,6,12,89)
-mean(y)
+```
+
+
+```r
+sqrt((sum((y-mean(y))^2))/(length(y)-1))
 ```
 
 ```
-## [1] 27.5
+## [1] 41.17038
 ```
 
 ```r
 #or
-mean(c(3,6,12,89))
+sd(y)
 ```
 
 ```
-## [1] 27.5
+## [1] 41.17038
+```
+
+```r
+#or
+sd(c(3,6,12,89))
+```
+
+```
+## [1] 41.17038
 ```
 
 ----
@@ -171,7 +186,7 @@ x1/x2
 ```
 
 ```
-## [1] 27.5
+## [1] 25.125
 ```
 
 ----
@@ -381,7 +396,7 @@ Let's visualize those values in a histogram:
 hist(a)
 ```
 
-![](R_Introduction_files/figure-html/unnamed-chunk-27-1.png) 
+![](R_Introduction_files/figure-slidy/unnamed-chunk-29-1.png) 
 
 We'll cover much more sophisticated graphics later...
 

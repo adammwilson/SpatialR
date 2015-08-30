@@ -1,28 +1,20 @@
 #' ---
 #' title: "Introduction to R"
 #' author: "Adam M. Wilson"
-#' date: "February 17, 2015"
+#' date: "August 31, 2015"
 #' output:
-#'   ioslides_presentation:
+#'   slidy_presentation:
 #'     fig_width: 7
 #'     fig_height: 6
 #'     keep_md: true
+#'     number_sections: true
+#'     toc: true
 #' ---
 #'     
 #' 
 #' 
 #' 
-#' ----
-#' 
-#' This script is available:
-#' 
-#'   * [SpatialAnalysisTutorials repository](`r paste0("http://github.com/",repo)`)
-#'   * Plain text (.R) with commented text 
-#'   [here](`r paste0("https://raw.githubusercontent.com/adammwilson/SpatialAnalysisTutorials/master/R_Introduction/",output)`)
-#'  
-#' 
 #' ## Variables
-#' 
 ## ------------------------------------------------------------------------
 x=1
 x
@@ -34,6 +26,7 @@ x
 x=c(5,8,14,91,3,36,14,30)
 x
 
+#' 
 #' ----
 #' 
 #' And do simple arithmetic:
@@ -53,15 +46,19 @@ x+2
 #' ### Variable naming conventions
 #' Naming your variables is your business, but there are [5 conventions](http://www.r-bloggers.com/consistent-naming-conventions-in-r/) to be aware of:
 #' 
-#' * alllowercase: _e.g._ `adjustcolor`
-#' * period.separated: _e.g._ `plot.new`
-#' * underscore_separated: _e.g._ `numeric_version`
-#' * lowerCamelCase: _e.g._ `addTaskCallback`
-#' * UpperCamelCase: _e.g._ `SignatureMethod`
+#' * **alllowercase**: _e.g._ `adjustcolor`
+#' * **period.separated**: _e.g._ `plot.new`
+#' * **underscore_separated**: _e.g._ `numeric_version`
+#' * **lowerCamelCase**: _e.g._ `addTaskCallback`
+#' * **UpperCamelCase**: _e.g._ `SignatureMethod`
 #' 
 #' ----
 #' 
 #' ### Subsetting
+## ------------------------------------------------------------------------
+x
+
+#' 
 #' Subset the vector using `x[ ]` notation
 ## ------------------------------------------------------------------------
 x[5]
@@ -92,7 +89,9 @@ mean(x)
 #' 
 #' ----
 #' 
-#' Type `?functionname` to learn more about a function, e.g. `?mean`.  In RStudio, you can also search in the help panel.  There are other arguments too: `mean(x, trim = 0, na.rm = FALSE, ...)`
+#' Type `?functionname` to get the documentation (`?mean`) or `??"search parameters` (??"standard deviation") to search the documentation.  In RStudio, you can also search in the help panel.  `mean` has other arguments too: 
+#' 
+#' `mean(x, trim = 0, na.rm = FALSE, ...)`
 #' 
 #' In RStudio, if you press `TAB` after a function name (such as `mean( `), it will show function arguments.
 #' 
@@ -101,17 +100,23 @@ mean(x)
 #' [pic1]: img/autocomplete.png "Autocomplete Screenshot"
 #' 
 #' 
-#' > Try to calculate the mean of `c(3,6,12,89)`.    
+#' > Calculate the standard deviation of `c(3,6,12,89)`.    
 #' 
 #' ---- 
 #' 
-#' ### Solution
+#' ### Standard Deviation
 ## ------------------------------------------------------------------------
 y=c(3,6,12,89)
-mean(y)
+
+#' 
+## ------------------------------------------------------------------------
+sqrt((sum((y-mean(y))^2))/(length(y)-1))
 
 #or
-mean(c(3,6,12,89))
+sd(y)
+
+#or
+sd(c(3,6,12,89))
 
 #' 
 #' ----
