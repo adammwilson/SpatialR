@@ -124,3 +124,27 @@ R Interface
 ![terminal](images/Terminal.png)
 
 But there are other options...
+
+R Interface: Mac
+=========
+![osx](images/osx.png)
+
+
+
+R Interface: Windows
+=========
+![terminal](images/Windows.png)
+
+
+
+R Interface: RStudio
+=========
+![Rstudio](images/Rstudio.png)
+
+Mac, Windows, Linux, and over the web (via RStudio Server)
+
+Workflow
+=========
+![workflow](images/workflow.png)
+
+Adapted from Gandrud (2014) _Reproducible Research with R and RStudio_.
