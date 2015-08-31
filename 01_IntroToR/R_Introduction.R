@@ -9,6 +9,7 @@
 #'     keep_md: true
 #'     number_sections: true
 #'     toc: true
+#'     framework   : revealjs
 #' ---
 #'     
 #' 
@@ -100,7 +101,7 @@ mean(x)
 #' [pic1]: img/autocomplete.png "Autocomplete Screenshot"
 #' 
 #' 
-#' > Calculate the standard deviation of `c(3,6,12,89)`.    
+#' > ![Autocomplete screenshot](img/check.png) Calculate the standard deviation of `c(3,6,12,89)`.    
 #' 
 #' ---- 
 #' 
@@ -109,15 +110,6 @@ mean(x)
 y=c(3,6,12,89)
 
 #' 
-## ------------------------------------------------------------------------
-sqrt((sum((y-mean(y))^2))/(length(y)-1))
-
-#or
-sd(y)
-
-#or
-sd(c(3,6,12,89))
-
 #' 
 #' ----
 #' 
@@ -144,7 +136,7 @@ mymean(f=x)
 mean(x)
 
 #' 
-#' > Any potential problems with the `mymean` function?
+#' > ![Autocomplete screenshot](img/check.png) Any potential problems with the `mymean` function?
 #' 
 #' ----
 #' 
@@ -153,7 +145,7 @@ mean(x)
 x3=c(5,8,NA,91,3,NA,14,30,100)
 
 #' 
-#' > What do you think `mymean(x3)` will return?
+#' > ![Autocomplete screenshot](img/check.png) What do you think `mymean(x3)` will return?
 #' 
 #' ----
 #' 
@@ -175,6 +167,8 @@ mean(x3,na.rm=T)
 #' R also has standard conditional tests to generate `TRUE` or `FALSE` values (which also behave as `0`s and `1`s.  These are often useful for filtering data (e.g. identify all values greater than 5).  The logical operators are `<`, `<=`, `>`, `>=`, `==` for exact equality and `!=` for inequality.
 #' 
 ## ------------------------------------------------------------------------
+  x
+
   x3 > 75
  
   x3 == 40
@@ -195,15 +189,10 @@ result =  x3 >  3
 result
 
 #' 
-#' > Try this:  define a function that counts how many values in a vector are less than or equal to 12
+#' >![Autocomplete screenshot](img/check.png) define a function that counts how many values in a vector are less than or equal (`<=`)to 12.  
 #' 
 #' ----
 #' 
-## ------------------------------------------------------------------------
-mycount=function(x){
-  sum(x<=12)
-}
-
 #' Try it:
 ## ------------------------------------------------------------------------
 x3
@@ -213,11 +202,6 @@ mycount(x3)
 #' 
 #' ----
 #' 
-## ------------------------------------------------------------------------
-mycount=function(x){
-  sum(x<=12,na.rm=T)
-}
-
 #' Try it:
 ## ------------------------------------------------------------------------
 x3
@@ -307,4 +291,12 @@ library(raster)
 #' 
 #' 
 #' If you don't have the packages above, install them in the package manager or by running `install.packages("raster")`.
+#' 
+#' ## That's all till next time.
+#' 
+#' Remember: 
+#' 
+#' * no class next week (Labor Day)
+#' * Homeworks are due the following Monday (September 14) BEFORE class!
+#' 
 #' 

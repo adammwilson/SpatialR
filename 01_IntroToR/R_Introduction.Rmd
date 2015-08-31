@@ -9,6 +9,7 @@ output:
     keep_md: true
     number_sections: true
     toc: true
+    framework   : revealjs
 ---
     
 
@@ -18,7 +19,6 @@ output:
 input  = knitr::current_input()  # filename of input document
 output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
 knitr::purl(input,output,documentation=2,quiet=T)
-repo="adammwilson/SpatialR/blob/master/R_Introduction"
 knitr::opts_chunk$set(cache=TRUE)
 ```
 
@@ -108,7 +108,7 @@ In RStudio, if you press `TAB` after a function name (such as `mean( `), it will
 [pic1]: img/autocomplete.png "Autocomplete Screenshot"
 
 
-> Calculate the standard deviation of `c(3,6,12,89)`.    
+> ![Autocomplete screenshot](img/check.png) Calculate the standard deviation of `c(3,6,12,89)`.    
 
 ---- 
 
@@ -117,7 +117,7 @@ In RStudio, if you press `TAB` after a function name (such as `mean( `), it will
 y=c(3,6,12,89)
 ```
 
-```{r}
+```{r,purl=F}
 sqrt((sum((y-mean(y))^2))/(length(y)-1))
 
 #or
@@ -152,7 +152,7 @@ Confirm it works:
 mean(x)
 ```
 
-> Any potential problems with the `mymean` function?
+> ![Autocomplete screenshot](img/check.png) Any potential problems with the `mymean` function?
 
 ----
 
@@ -161,7 +161,7 @@ mean(x)
 x3=c(5,8,NA,91,3,NA,14,30,100)
 ```
 
-> What do you think `mymean(x3)` will return?
+> ![Autocomplete screenshot](img/check.png) What do you think `mymean(x3)` will return?
 
 ----
 
@@ -183,6 +183,8 @@ Writing simple functions is easy, writing robust, reliable functions can be hard
 R also has standard conditional tests to generate `TRUE` or `FALSE` values (which also behave as `0`s and `1`s.  These are often useful for filtering data (e.g. identify all values greater than 5).  The logical operators are `<`, `<=`, `>`, `>=`, `==` for exact equality and `!=` for inequality.
 
 ```{r}
+  x
+
   x3 > 75
  
   x3 == 40
@@ -203,11 +205,11 @@ result =  x3 >  3
 result
 ```
 
-> Try this:  define a function that counts how many values in a vector are less than or equal to 12
+>![Autocomplete screenshot](img/check.png) define a function that counts how many values in a vector are less than or equal (`<=`) to 12.  
 
 ----
 
-```{r}
+```{r, purl=F}
 mycount=function(x){
   sum(x<=12)
 }
@@ -221,7 +223,7 @@ oops!
 
 ----
 
-```{r}
+```{r, purl=F}
 mycount=function(x){
   sum(x<=12,na.rm=T)
 }
@@ -315,4 +317,12 @@ library(raster)
 
 
 If you don't have the packages above, install them in the package manager or by running `install.packages("raster")`.
+
+## That's all till next time.
+
+Remember: 
+
+* no class next week (Labor Day)
+* Homeworks are due the following Monday (September 14) BEFORE class!
+
 

@@ -138,7 +138,7 @@ In RStudio, if you press `TAB` after a function name (such as `mean( `), it will
 [pic1]: img/autocomplete.png "Autocomplete Screenshot"
 
 
-> Calculate the standard deviation of `c(3,6,12,89)`.    
+> ![Autocomplete screenshot](img/check.png) Calculate the standard deviation of `c(3,6,12,89)`.    
 
 ---- 
 
@@ -215,7 +215,7 @@ mean(x)
 ## [1] 25.125
 ```
 
-> Any potential problems with the `mymean` function?
+> ![Autocomplete screenshot](img/check.png) Any potential problems with the `mymean` function?
 
 ----
 
@@ -225,7 +225,7 @@ mean(x)
 x3=c(5,8,NA,91,3,NA,14,30,100)
 ```
 
-> What do you think `mymean(x3)` will return?
+> ![Autocomplete screenshot](img/check.png) What do you think `mymean(x3)` will return?
 
 ----
 
@@ -263,6 +263,14 @@ Writing simple functions is easy, writing robust, reliable functions can be hard
 
 R also has standard conditional tests to generate `TRUE` or `FALSE` values (which also behave as `0`s and `1`s.  These are often useful for filtering data (e.g. identify all values greater than 5).  The logical operators are `<`, `<=`, `>`, `>=`, `==` for exact equality and `!=` for inequality.
 
+
+```r
+  x
+```
+
+```
+## [1]  5  8 14 91  3 36 14 30
+```
 
 ```r
   x3 > 75
@@ -311,7 +319,7 @@ result
 ## [1]  TRUE  TRUE    NA  TRUE FALSE    NA  TRUE  TRUE  TRUE
 ```
 
-> Try this:  define a function that counts how many values in a vector are less than or equal to 12
+>![Autocomplete screenshot](img/check.png) define a function that counts how many values in a vector are less than or equal (`<=`)to 12.  
 
 ----
 
@@ -537,4 +545,12 @@ library(raster)
 
 
 If you don't have the packages above, install them in the package manager or by running `install.packages("raster")`.
+
+## That's all till next time.
+
+Remember: 
+
+* no class next week (Labor Day)
+* Homeworks are due the following Monday (September 14) BEFORE class!
+
 
