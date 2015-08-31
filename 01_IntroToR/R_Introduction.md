@@ -319,7 +319,7 @@ result
 ## [1]  TRUE  TRUE    NA  TRUE FALSE    NA  TRUE  TRUE  TRUE
 ```
 
->![Autocomplete screenshot](img/check.png) define a function that counts how many values in a vector are less than or equal (`<=`)to 12.  
+>![Autocomplete screenshot](img/check.png) define a function that counts how many values in a vector are less than or equal (`<=`) to 12.  
 
 ----
 
