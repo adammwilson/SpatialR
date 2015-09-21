@@ -198,7 +198,7 @@ The text and R code are interwoven in the output:
 
 The time is `` `r time` ``
 
-The time is Mon 21 Sep 15:05:21 2015
+The time is Mon 21 Sep 15:44:39 2015
 
 
 
@@ -256,20 +256,20 @@ The machine-readable part: R
     height: 400px;
   }  
   </style>
-<div id = 'chart4d9d5e937b72' class = 'rChart nvd3'></div>
+<div id = 'chart4fdf676b268b' class = 'rChart nvd3'></div>
 <script type='text/javascript'>
  $(document).ready(function(){
-      drawchart4d9d5e937b72()
+      drawchart4fdf676b268b()
     });
-    function drawchart4d9d5e937b72(){  
+    function drawchart4fdf676b268b(){  
       var opts = {
- "dom": "chart4d9d5e937b72",
+ "dom": "chart4fdf676b268b",
 "width":    800,
 "height":    400,
 "x": "wt",
 "y": "mpg",
 "type": "scatterChart",
-"id": "chart4d9d5e937b72" 
+"id": "chart4fdf676b268b" 
 },
         data = [
  {
@@ -754,21 +754,21 @@ The machine-readable part: R
     height: 500px;
   }  
   </style>
-<div id = 'chart4d9d7e88ec9' class = 'rChart nvd3'></div>
+<div id = 'chart4fdf233ad394' class = 'rChart nvd3'></div>
 <script type='text/javascript'>
  $(document).ready(function(){
-      drawchart4d9d7e88ec9()
+      drawchart4fdf233ad394()
     });
-    function drawchart4d9d7e88ec9(){  
+    function drawchart4fdf233ad394(){  
       var opts = {
- "dom": "chart4d9d7e88ec9",
+ "dom": "chart4fdf233ad394",
 "width":    800,
 "height":    500,
 "x": "Hair",
 "y": "Freq",
 "group": "Eye",
 "type": "multiBarChart",
-"id": "chart4d9d7e88ec9" 
+"id": "chart4fdf233ad394" 
 },
         data = [
  {
@@ -1068,6 +1068,16 @@ Implement mechanisms to indicate & encourage **degrees of compliance** (ie. clea
 
 <small> Demo drawn using materials from Dr. Çetinkaya-Rundel</small>
 
+## Install Git on your computer
+
+### Windows and OSX
+http://git-scm.com/downloads
+
+### Linux
+` sudo apt-get install git `
+or similar
+
+
 ## Cloning the repository
 
 1. Go to RStudio
@@ -1110,6 +1120,7 @@ Load these packages in a code chunk:
 ```r
 library(dplyr)
 library(ggplot2)
+library(maps)
 library(spocc)
 ```
 
@@ -1131,16 +1142,24 @@ This can take a few seconds.
 sp='Turdus migratorius'
 
 ## run the query and convert to data.frame()
-d = occ(query=sp, from='ebird',limit = 10000) %>% occ2df()
+d = occ(query=sp, from='ebird',limit = 1000) %>% occ2df()
 ```
 
 
-## Step 3: 
+## Step 3: Map it
 
-ggplot(d,aes(x=format(date,"%m"),y=latitude,group=1))+
-geom_point()+
-geom_smooth()
 
+```r
+# Load coastline
+map=map_data("world")
+
+ggplot(d,aes(x=longitude,y=latitude))+
+  geom_polygon(aes(x=long,y=lat,group=group,order=order),data=map)+
+  geom_point(col="red")+
+  coord_equal()
+```
+
+![](03_Reproducibile_files/figure-html/unnamed-chunk-5-1.png) 
 
 ## Step 4:
 Update the YAML header to keep the markdown file
@@ -1178,7 +1197,12 @@ output:
 
 ## Colophon
 
+Slid
 [Slides based on Ben Marwick's presentation to the UW Center for Statistics and Social Sciences (12 March 2014)](https://github.com/benmarwick/CSSS-Primer-Reproducible-Research) ([OrcID](http://orcid.org/0000-0001-7879-4531))
+
+[Slides based on Ben Marwick's presentation to the UW Center for Statistics and Social Sciences (12 March 2014)](https://github.com/benmarwick/CSSS-Primer-Reproducible-Research) ([OrcID](http://orcid.org/0000-0001-7879-4531))
+
+
 
 Licensing: 
 * Presentation: [CC-BY-3.0 ](http://creativecommons.org/licenses/by/3.0/us/)

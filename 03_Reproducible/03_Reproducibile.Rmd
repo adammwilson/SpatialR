@@ -433,6 +433,16 @@ Implement mechanisms to indicate & encourage **degrees of compliance** (ie. clea
 
 <small> Demo drawn using materials from Dr. Çetinkaya-Rundel</small>
 
+## Install Git on your computer
+
+### Windows and OSX
+http://git-scm.com/downloads
+
+### Linux
+` sudo apt-get install git `
+or similar
+
+
 ## Cloning the repository
 
 1. Go to RStudio
@@ -473,6 +483,7 @@ Load these packages in a code chunk:
 ```{r, message=F}
 library(dplyr)
 library(ggplot2)
+library(maps)
 library(spocc)
 ```
 
@@ -493,16 +504,20 @@ This can take a few seconds.
 sp='Turdus migratorius'
 
 ## run the query and convert to data.frame()
-d = occ(query=sp, from='ebird',limit = 1000, geometry=c(-78.5,42.9,-78.53,42.7)) %>% occ2df()
+d = occ(query=sp, from='ebird',limit = 1000) %>% occ2df()
 ```
 
 
-## Step 3: 
+## Step 3: Map it
 
 ```{r}
-ggplot(d,aes(x=format(date,"%m"),y=latitude,group=1))+
-geom_point()+
-geom_smooth()
+# Load coastline
+map=map_data("world")
+
+ggplot(d,aes(x=longitude,y=latitude))+
+  geom_polygon(aes(x=long,y=lat,group=group,order=order),data=map)+
+  geom_point(col="red")+
+  coord_equal()
 ```
 
 ## Step 4:
@@ -526,7 +541,9 @@ output:
       keep_md: true
 ```
 
-## Step 3: Commit and push all changes to GitHub
+And click `knit HTML` to generate the output
+
+## Step 5: Commit and push all changes to GitHub
 
 1. Stage
 2. Commit (with a message)
