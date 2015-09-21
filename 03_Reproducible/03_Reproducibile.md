@@ -3,18 +3,22 @@ Adam M. Wilson
 September 2015  
 
 
-# Reproducible <br> Research
-
-Scripting, RMarkdown, & Git
-
-
 ## Overview
+
+### Questions from last week?
+
+* dplyr: data wrangling
+* tidyr: data reformating
+
+### Homeworks posted, due next week.  
+
+### Today
 - Definitions, motives, history, spectrum
 - Current practices 
 - A selection of tools to improve reproducibility 
 - Challenges, standards & our role in the future of reproducible research
+- Example markdown document and Git!
 
-<small>[Slides based on Ben Marwick's presentation to the UW Center for Statistics and Social Sciences (12 March 2014)](https://github.com/benmarwick/CSSS-Primer-Reproducible-Research) ([OrcID](http://orcid.org/0000-0001-7879-4531))</small>
 
 ---
 
@@ -56,14 +60,14 @@ Scripting, RMarkdown, & Git
 - Nondisclosure agreements & intellectual property 
 - Software licensing issues
 - Competition
-- Neither necessary nor sufficient for correctness (but essential for dispute resolution)
+- Neither necessary nor sufficient for correctness (but useful in disputes)
 
 
 **Cultural & personal**
 
-- Few researchers follow even minimal reproducibility standards.
+- Few follow even minimal reproducibility standards.
 - Few expect reproducibility 
-- No uniform standards of reproducibility, so no established user base
+- No uniform standards
 - Inertia & embarassment
 
 
@@ -74,10 +78,10 @@ Scripting, RMarkdown, & Git
 <small>Peng 2011, Science 334(6060) pp. 1226-1227</small>
 
 
-## Goal is to expose the reader to more of the research workflow
+## Goal: expose more of the research workflow
 
 
-<img src="figures/peng-pipeline.jpg" alt="alt text" width="800">
+<img src="figures/peng-pipeline.jpg" alt="alt text" width="600">
 
 <small><small>http://www.stodden.net/AMP2011/slides/pengslides.pdf</small></small>
 
@@ -92,6 +96,7 @@ Scripting, RMarkdown, & Git
 
 <br><br>
 <br><br>
+<br><br>
 
 <small>![alt text](figures/lemon.png)</small>
 
@@ -104,34 +109,30 @@ Scripting, RMarkdown, & Git
 - Excel uses poor algorithms for many functions
 - Scripting is possible but rare 
 
-<br> <br><br>
-<br><br>
-<br><br><br>
+<br><br><br><br><br><br><br><br><br><br>
 
-<img src="figures/phd-comic-vcs.gif" alt="alt text" width="500">
+<img src="figures/phd-comic-vcs.gif" alt="alt text" width="400">
 
 
-## Click trails are ephemeral & dangerous
+## Click trails are ephemeral & dangerous {.columns-2}
 
 - Lots of human effort for tedious & time-wasting tasks
-- Error-prone due to manual & ad hoc data handling (column and row offsets are common)
+- Error-prone due to manual & ad hoc data handling
 - Difficult to record -  hard to reconstruct a 'click history'
-- Tiny changes in data or method require extensive reworking efforts
+- Tiny changes in data or method require extensive reworking
+
+<br><br><br><br>
+
+<img src="figures/contrails.jpg" alt="alt text" width="400">
 
 
+## Case study: Reinhart and Rogoff controversy {.columns-2}
 
-![alt text](figures/contrails.jpg)
+<img src="figures/reinhart_rogoff_coding_error_0.png" alt="alt text" width="400">
 
-
-## Case study: Reinhart and Rogoff controversy
-
-![alt text](figures/reinhart_rogoff_coding_error_0.png)
-
-
-- Claimed high debt-to-GDP ratios led to low GDP growth
+- 2010: Claimed high debt-to-GDP ratios led to low GDP growth
 - Threshold to growth at a debt-to-GDP ratio of >90%
 - Substantial popular impact on autsterity politics 
-
 
 ## Case study: Reinhart and Rogoff controversy
 
@@ -140,33 +141,35 @@ Scripting, RMarkdown, & Git
 A coding error in their Excel spreadsheet sliced several countries out of the data set....
 [The Economist](http://www.economist.com/news/finance-and-economics/21576362-seminal-analysis-relationship-between-debt-and-growth-comes-under)
 
-
 ## Case study: Gay Marrage
 
 #### In May 2015 _Science_ retracted a study of how canvassers can sway people's opinions about gay marriage published just 5 months ago.
 
-> Original survey data not made available for independent reproduction of results. + Survey incentives misrepresented. + Sponsorship statement false. 
+* Original survey data not made available for independent reproduction of results
+* Survey incentives misrepresented
+* Sponsorship statement false. 
+
 <small>- Science Editor-in-Chief Marcia McNutt</small>
 
 Two Berkeley grad students who attempted to replicate the study quickly discovered that the data must have been faked.
 
 [Source](http://news.sciencemag.org/policy/2015/05/science-retracts-gay-marriage-paper-without-lead-author-s-consent)
 
----
 ## Case study: Seizure Medicine
 
 #### 2013 Seizure study retracted after authors realize data got "terribly mixed"
-> The article has been retracted at the request of the authors. After carefully re-examining the data presented in the article, they identified that data of two different hospitals got terribly mixed. The published results cannot be reproduced in accordance with scientific and clinical correctness. <small> Authors of Low Dose Lidocaine for Refractory Seizures in Preterm Neonates </small>
+
+> "The article has been retracted at the request of the authors. After carefully re-examining the data presented in the article, they identified that data of two different hospitals got terribly mixed. The published results cannot be reproduced in accordance with scientific and clinical correctness."" <small> Authors of Low Dose Lidocaine for Refractory Seizures in Preterm Neonates </small>
 
 [Source](http://retractionwatch.com/2013/02/01/seizure-study-retracted-after-authors-realize-data-got-terribly-mixed/)
 
 
 ## Bad spreadsheet merge kills depression paper, quick fix resurrects it
-Authors informed the journal that the merge of lab results and other survey data used in the paper resulted in an error regarding the identification codes. Results of the analyses were based on the data set in which this error occurred. Further analyses established the results reported in this manuscript and interpretation of the data are not correct.
+Authors informed the journal that the merge of lab results and other survey data used in the paper resulted in an error regarding the identification codes. Results of the analyses were based on the data set in which this error occurred. 
 
-> "Lower levels of CSF IL-6 were associated with current depression and with future depression […]" <small>Original conclusion</small>
+> "**Lower** levels of CSF IL-6 were associated with current depression and with future depression […]" <small>Original conclusion</small>
 
-> "Higher levels of CSF IL-6 and IL-8 were associated with current depression […]" <small> Revised conclusion </small>
+> "**Higher** levels of CSF IL-6 and IL-8 were associated with current depression […]" <small> Revised conclusion </small>
 
 [Source](http://retractionwatch.com/2014/07/01/bad-spreadsheet-merge-kills-depression-paper-quick-fix-resurrects-it/)
 
@@ -198,7 +201,7 @@ The text and R code are interwoven in the output:
 
 The time is `` `r time` ``
 
-The time is Mon 21 Sep 15:44:39 2015
+The time is Mon 21 Sep 16:49:00 2015
 
 
 
@@ -240,690 +243,11 @@ The machine-readable part: R
 <img src="figures/roxygen2.jpg" alt="alt text" width="800">
 
 
-## Interactive charts in the browser with the rCharts package
-
-<link rel='stylesheet' href=//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css>
-<script type='text/javascript' src=//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js></script>
-<script type='text/javascript' src=//d3js.org/d3.v3.min.js></script>
-<script type='text/javascript' src=//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js></script>
-<script type='text/javascript' src=//nvd3.org/assets/lib/fisheye.js></script> 
- <style>
-  .rChart {
-    display: block;
-    margin-left: auto; 
-    margin-right: auto;
-    width: 800px;
-    height: 400px;
-  }  
-  </style>
-<div id = 'chart4fdf676b268b' class = 'rChart nvd3'></div>
-<script type='text/javascript'>
- $(document).ready(function(){
-      drawchart4fdf676b268b()
-    });
-    function drawchart4fdf676b268b(){  
-      var opts = {
- "dom": "chart4fdf676b268b",
-"width":    800,
-"height":    400,
-"x": "wt",
-"y": "mpg",
-"type": "scatterChart",
-"id": "chart4fdf676b268b" 
-},
-        data = [
- {
- "mpg":             21,
-"cyl":              6,
-"disp":            160,
-"hp":            110,
-"drat":            3.9,
-"wt":           2.62,
-"qsec":          16.46,
-"vs":              0,
-"am":              1,
-"gear":              4,
-"carb":              4 
-},
-{
- "mpg":             21,
-"cyl":              6,
-"disp":            160,
-"hp":            110,
-"drat":            3.9,
-"wt":          2.875,
-"qsec":          17.02,
-"vs":              0,
-"am":              1,
-"gear":              4,
-"carb":              4 
-},
-{
- "mpg":           22.8,
-"cyl":              4,
-"disp":            108,
-"hp":             93,
-"drat":           3.85,
-"wt":           2.32,
-"qsec":          18.61,
-"vs":              1,
-"am":              1,
-"gear":              4,
-"carb":              1 
-},
-{
- "mpg":           21.4,
-"cyl":              6,
-"disp":            258,
-"hp":            110,
-"drat":           3.08,
-"wt":          3.215,
-"qsec":          19.44,
-"vs":              1,
-"am":              0,
-"gear":              3,
-"carb":              1 
-},
-{
- "mpg":           18.7,
-"cyl":              8,
-"disp":            360,
-"hp":            175,
-"drat":           3.15,
-"wt":           3.44,
-"qsec":          17.02,
-"vs":              0,
-"am":              0,
-"gear":              3,
-"carb":              2 
-},
-{
- "mpg":           18.1,
-"cyl":              6,
-"disp":            225,
-"hp":            105,
-"drat":           2.76,
-"wt":           3.46,
-"qsec":          20.22,
-"vs":              1,
-"am":              0,
-"gear":              3,
-"carb":              1 
-},
-{
- "mpg":           14.3,
-"cyl":              8,
-"disp":            360,
-"hp":            245,
-"drat":           3.21,
-"wt":           3.57,
-"qsec":          15.84,
-"vs":              0,
-"am":              0,
-"gear":              3,
-"carb":              4 
-},
-{
- "mpg":           24.4,
-"cyl":              4,
-"disp":          146.7,
-"hp":             62,
-"drat":           3.69,
-"wt":           3.19,
-"qsec":             20,
-"vs":              1,
-"am":              0,
-"gear":              4,
-"carb":              2 
-},
-{
- "mpg":           22.8,
-"cyl":              4,
-"disp":          140.8,
-"hp":             95,
-"drat":           3.92,
-"wt":           3.15,
-"qsec":           22.9,
-"vs":              1,
-"am":              0,
-"gear":              4,
-"carb":              2 
-},
-{
- "mpg":           19.2,
-"cyl":              6,
-"disp":          167.6,
-"hp":            123,
-"drat":           3.92,
-"wt":           3.44,
-"qsec":           18.3,
-"vs":              1,
-"am":              0,
-"gear":              4,
-"carb":              4 
-},
-{
- "mpg":           17.8,
-"cyl":              6,
-"disp":          167.6,
-"hp":            123,
-"drat":           3.92,
-"wt":           3.44,
-"qsec":           18.9,
-"vs":              1,
-"am":              0,
-"gear":              4,
-"carb":              4 
-},
-{
- "mpg":           16.4,
-"cyl":              8,
-"disp":          275.8,
-"hp":            180,
-"drat":           3.07,
-"wt":           4.07,
-"qsec":           17.4,
-"vs":              0,
-"am":              0,
-"gear":              3,
-"carb":              3 
-},
-{
- "mpg":           17.3,
-"cyl":              8,
-"disp":          275.8,
-"hp":            180,
-"drat":           3.07,
-"wt":           3.73,
-"qsec":           17.6,
-"vs":              0,
-"am":              0,
-"gear":              3,
-"carb":              3 
-},
-{
- "mpg":           15.2,
-"cyl":              8,
-"disp":          275.8,
-"hp":            180,
-"drat":           3.07,
-"wt":           3.78,
-"qsec":             18,
-"vs":              0,
-"am":              0,
-"gear":              3,
-"carb":              3 
-},
-{
- "mpg":           10.4,
-"cyl":              8,
-"disp":            472,
-"hp":            205,
-"drat":           2.93,
-"wt":           5.25,
-"qsec":          17.98,
-"vs":              0,
-"am":              0,
-"gear":              3,
-"carb":              4 
-},
-{
- "mpg":           10.4,
-"cyl":              8,
-"disp":            460,
-"hp":            215,
-"drat":              3,
-"wt":          5.424,
-"qsec":          17.82,
-"vs":              0,
-"am":              0,
-"gear":              3,
-"carb":              4 
-},
-{
- "mpg":           14.7,
-"cyl":              8,
-"disp":            440,
-"hp":            230,
-"drat":           3.23,
-"wt":          5.345,
-"qsec":          17.42,
-"vs":              0,
-"am":              0,
-"gear":              3,
-"carb":              4 
-},
-{
- "mpg":           32.4,
-"cyl":              4,
-"disp":           78.7,
-"hp":             66,
-"drat":           4.08,
-"wt":            2.2,
-"qsec":          19.47,
-"vs":              1,
-"am":              1,
-"gear":              4,
-"carb":              1 
-},
-{
- "mpg":           30.4,
-"cyl":              4,
-"disp":           75.7,
-"hp":             52,
-"drat":           4.93,
-"wt":          1.615,
-"qsec":          18.52,
-"vs":              1,
-"am":              1,
-"gear":              4,
-"carb":              2 
-},
-{
- "mpg":           33.9,
-"cyl":              4,
-"disp":           71.1,
-"hp":             65,
-"drat":           4.22,
-"wt":          1.835,
-"qsec":           19.9,
-"vs":              1,
-"am":              1,
-"gear":              4,
-"carb":              1 
-},
-{
- "mpg":           21.5,
-"cyl":              4,
-"disp":          120.1,
-"hp":             97,
-"drat":            3.7,
-"wt":          2.465,
-"qsec":          20.01,
-"vs":              1,
-"am":              0,
-"gear":              3,
-"carb":              1 
-},
-{
- "mpg":           15.5,
-"cyl":              8,
-"disp":            318,
-"hp":            150,
-"drat":           2.76,
-"wt":           3.52,
-"qsec":          16.87,
-"vs":              0,
-"am":              0,
-"gear":              3,
-"carb":              2 
-},
-{
- "mpg":           15.2,
-"cyl":              8,
-"disp":            304,
-"hp":            150,
-"drat":           3.15,
-"wt":          3.435,
-"qsec":           17.3,
-"vs":              0,
-"am":              0,
-"gear":              3,
-"carb":              2 
-},
-{
- "mpg":           13.3,
-"cyl":              8,
-"disp":            350,
-"hp":            245,
-"drat":           3.73,
-"wt":           3.84,
-"qsec":          15.41,
-"vs":              0,
-"am":              0,
-"gear":              3,
-"carb":              4 
-},
-{
- "mpg":           19.2,
-"cyl":              8,
-"disp":            400,
-"hp":            175,
-"drat":           3.08,
-"wt":          3.845,
-"qsec":          17.05,
-"vs":              0,
-"am":              0,
-"gear":              3,
-"carb":              2 
-},
-{
- "mpg":           27.3,
-"cyl":              4,
-"disp":             79,
-"hp":             66,
-"drat":           4.08,
-"wt":          1.935,
-"qsec":           18.9,
-"vs":              1,
-"am":              1,
-"gear":              4,
-"carb":              1 
-},
-{
- "mpg":             26,
-"cyl":              4,
-"disp":          120.3,
-"hp":             91,
-"drat":           4.43,
-"wt":           2.14,
-"qsec":           16.7,
-"vs":              0,
-"am":              1,
-"gear":              5,
-"carb":              2 
-},
-{
- "mpg":           30.4,
-"cyl":              4,
-"disp":           95.1,
-"hp":            113,
-"drat":           3.77,
-"wt":          1.513,
-"qsec":           16.9,
-"vs":              1,
-"am":              1,
-"gear":              5,
-"carb":              2 
-},
-{
- "mpg":           15.8,
-"cyl":              8,
-"disp":            351,
-"hp":            264,
-"drat":           4.22,
-"wt":           3.17,
-"qsec":           14.5,
-"vs":              0,
-"am":              1,
-"gear":              5,
-"carb":              4 
-},
-{
- "mpg":           19.7,
-"cyl":              6,
-"disp":            145,
-"hp":            175,
-"drat":           3.62,
-"wt":           2.77,
-"qsec":           15.5,
-"vs":              0,
-"am":              1,
-"gear":              5,
-"carb":              6 
-},
-{
- "mpg":             15,
-"cyl":              8,
-"disp":            301,
-"hp":            335,
-"drat":           3.54,
-"wt":           3.57,
-"qsec":           14.6,
-"vs":              0,
-"am":              1,
-"gear":              5,
-"carb":              8 
-},
-{
- "mpg":           21.4,
-"cyl":              4,
-"disp":            121,
-"hp":            109,
-"drat":           4.11,
-"wt":           2.78,
-"qsec":           18.6,
-"vs":              1,
-"am":              1,
-"gear":              4,
-"carb":              2 
-} 
-]
-  
-      if(!(opts.type==="pieChart" || opts.type==="sparklinePlus" || opts.type==="bulletChart")) {
-        var data = d3.nest()
-          .key(function(d){
-            //return opts.group === undefined ? 'main' : d[opts.group]
-            //instead of main would think a better default is opts.x
-            return opts.group === undefined ? opts.y : d[opts.group];
-          })
-          .entries(data);
-      }
-      
-      if (opts.disabled != undefined){
-        data.map(function(d, i){
-          d.disabled = opts.disabled[i]
-        })
-      }
-      
-      nv.addGraph(function() {
-        var chart = nv.models[opts.type]()
-          .width(opts.width)
-          .height(opts.height)
-          
-        if (opts.type != "bulletChart"){
-          chart
-            .x(function(d) { return d[opts.x] })
-            .y(function(d) { return d[opts.y] })
-        }
-          
-         
-        
-          
-        
-
-        
-        
-        
-      
-       d3.select("#" + opts.id)
-        .append('svg')
-        .datum(data)
-        .transition().duration(500)
-        .call(chart);
-
-       nv.utils.windowResize(chart.update);
-       return chart;
-      });
-    };
-</script>
-
-## Interactive charts in the browser with the rCharts package
-
-<link rel='stylesheet' href=//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css>
-<script type='text/javascript' src=//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js></script>
-<script type='text/javascript' src=//d3js.org/d3.v3.min.js></script>
-<script type='text/javascript' src=//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js></script>
-<script type='text/javascript' src=//nvd3.org/assets/lib/fisheye.js></script> 
- <style>
-  .rChart {
-    display: block;
-    margin-left: auto; 
-    margin-right: auto;
-    width: 800px;
-    height: 500px;
-  }  
-  </style>
-<div id = 'chart4fdf233ad394' class = 'rChart nvd3'></div>
-<script type='text/javascript'>
- $(document).ready(function(){
-      drawchart4fdf233ad394()
-    });
-    function drawchart4fdf233ad394(){  
-      var opts = {
- "dom": "chart4fdf233ad394",
-"width":    800,
-"height":    500,
-"x": "Hair",
-"y": "Freq",
-"group": "Eye",
-"type": "multiBarChart",
-"id": "chart4fdf233ad394" 
-},
-        data = [
- {
- "Hair": "Black",
-"Eye": "Brown",
-"Sex": "Male",
-"Freq":             32 
-},
-{
- "Hair": "Brown",
-"Eye": "Brown",
-"Sex": "Male",
-"Freq":             53 
-},
-{
- "Hair": "Red",
-"Eye": "Brown",
-"Sex": "Male",
-"Freq":             10 
-},
-{
- "Hair": "Blond",
-"Eye": "Brown",
-"Sex": "Male",
-"Freq":              3 
-},
-{
- "Hair": "Black",
-"Eye": "Blue",
-"Sex": "Male",
-"Freq":             11 
-},
-{
- "Hair": "Brown",
-"Eye": "Blue",
-"Sex": "Male",
-"Freq":             50 
-},
-{
- "Hair": "Red",
-"Eye": "Blue",
-"Sex": "Male",
-"Freq":             10 
-},
-{
- "Hair": "Blond",
-"Eye": "Blue",
-"Sex": "Male",
-"Freq":             30 
-},
-{
- "Hair": "Black",
-"Eye": "Hazel",
-"Sex": "Male",
-"Freq":             10 
-},
-{
- "Hair": "Brown",
-"Eye": "Hazel",
-"Sex": "Male",
-"Freq":             25 
-},
-{
- "Hair": "Red",
-"Eye": "Hazel",
-"Sex": "Male",
-"Freq":              7 
-},
-{
- "Hair": "Blond",
-"Eye": "Hazel",
-"Sex": "Male",
-"Freq":              5 
-},
-{
- "Hair": "Black",
-"Eye": "Green",
-"Sex": "Male",
-"Freq":              3 
-},
-{
- "Hair": "Brown",
-"Eye": "Green",
-"Sex": "Male",
-"Freq":             15 
-},
-{
- "Hair": "Red",
-"Eye": "Green",
-"Sex": "Male",
-"Freq":              7 
-},
-{
- "Hair": "Blond",
-"Eye": "Green",
-"Sex": "Male",
-"Freq":              8 
-} 
-]
-  
-      if(!(opts.type==="pieChart" || opts.type==="sparklinePlus" || opts.type==="bulletChart")) {
-        var data = d3.nest()
-          .key(function(d){
-            //return opts.group === undefined ? 'main' : d[opts.group]
-            //instead of main would think a better default is opts.x
-            return opts.group === undefined ? opts.y : d[opts.group];
-          })
-          .entries(data);
-      }
-      
-      if (opts.disabled != undefined){
-        data.map(function(d, i){
-          d.disabled = opts.disabled[i]
-        })
-      }
-      
-      nv.addGraph(function() {
-        var chart = nv.models[opts.type]()
-          .width(opts.width)
-          .height(opts.height)
-          
-        if (opts.type != "bulletChart"){
-          chart
-            .x(function(d) { return d[opts.x] })
-            .y(function(d) { return d[opts.y] })
-        }
-          
-         
-        
-          
-        
-
-        
-        
-        
-      
-       d3.select("#" + opts.id)
-        .append('svg')
-        .datum(data)
-        .transition().duration(500)
-        .call(chart);
-
-       nv.utils.windowResize(chart.update);
-       return chart;
-      });
-    };
-</script>
-
-
 ## Need a document formatting language  {.columns-2}
 
 <img src="figures/markdown.png" alt="alt text" width="300">
 
 Markdown: lightweight document formatting syntax. Easy to write, read and publish as-is.
-
 
 The human-readable part
 
@@ -932,9 +256,14 @@ The human-readable part
 - embed images in html files (convenient for sharing)
 - equations
 
+e.g.
+
+ * `*` for bullet
+ * `_` for underline
+
 ## Dynamic documents in R  {.columns-2}
 
-knitr - descendant of Sweave  
+`knitr` - descendant of Sweave  
 
 Engine for dynamic report generation in R
 
@@ -951,7 +280,7 @@ Engine for dynamic report generation in R
 
 
 <img src="figures/pandoc-workflow-rmd-md.png" alt="alt text" width="100%">
-<small><small>http://kieranhealy.org/blog/archives/2014/01/23/plain-text/ </small></small>
+<small><small><small>http://kieranhealy.org/blog/archives/2014/01/23/plain-text/ </small></small></small>
 
 A universal document converter, open source, cross-platform
 
@@ -959,6 +288,7 @@ A universal document converter, open source, cross-platform
 * knitr->markdown (with computation)   
 * use pandoc to get HTML/PDF/DOCX
 
+# Version Control
 
 ## Tracking changes with version control 
 
@@ -1054,6 +384,17 @@ Implement mechanisms to indicate & encourage **degrees of compliance** (ie. clea
 
 #  Demo: let's get started
 
+
+## Install Git on your computer
+
+### Windows and OSX
+http://git-scm.com/downloads
+
+### Linux
+` sudo apt-get install git `
+or similar
+
+
 ## Creating an account on [GitHub](github.com)
 
 1. Create a GitHub account at [https://github.com/](https://github.com/)
@@ -1066,19 +407,8 @@ Implement mechanisms to indicate & encourage **degrees of compliance** (ie. clea
     * Check the box for "Initialize this repository with a README"
 3. Click "Create Repository"
 
-<small> Demo drawn using materials from Dr. Çetinkaya-Rundel</small>
 
-## Install Git on your computer
-
-### Windows and OSX
-http://git-scm.com/downloads
-
-### Linux
-` sudo apt-get install git `
-or similar
-
-
-## Cloning the repository
+## In RStudio: `clone` the repository
 
 1. Go to RStudio
     * File -> New Project
@@ -1089,8 +419,6 @@ or similar
     * Create as a subdirectory of: Browse and create a new folder called `GEO503` (or similar)
     
 ## R Markdown
-
-**Live demo** 
 
 Cheatsheet:
 
@@ -1135,7 +463,6 @@ Now use the `occ()` function to download all the _occurrence_ records for the Am
 
 <small><small><small>Licensed under CC BY-SA 3.0 via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Turdus-migratorius-002.jpg#/media/File:Turdus-migratorius-002.jpg)</small></small></small>
 
-This can take a few seconds.
 
 ```r
 ## define which species to query
@@ -1144,7 +471,7 @@ sp='Turdus migratorius'
 ## run the query and convert to data.frame()
 d = occ(query=sp, from='ebird',limit = 1000) %>% occ2df()
 ```
-
+This can take a few seconds.
 
 ## Step 3: Map it
 
@@ -1184,12 +511,22 @@ output:
       keep_md: true
 ```
 
-## Step 3: Commit and push all changes to GitHub
+And click `knit HTML` to generate the output
+
+## Step 5: Commit and push all changes to GitHub
 
 1. Stage
 2. Commit (with a message)
 3. Push
 
+## Step 6:  Explore markdown functions
+
+1. Use the Cheatsheet to add sections and some example narrative.  
+2. Try changing changing the species name to your favorite species and re-run the report.  
+3. Stage, Commit, Push!
+4. Explore the markdown file on the GitHub website.  
+
+<a href="https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf"> <img src="figures/rmarkdown.png" alt="alt text" width="400"></a>
 
 ##  Final
 
@@ -1200,8 +537,7 @@ output:
 Slid
 [Slides based on Ben Marwick's presentation to the UW Center for Statistics and Social Sciences (12 March 2014)](https://github.com/benmarwick/CSSS-Primer-Reproducible-Research) ([OrcID](http://orcid.org/0000-0001-7879-4531))
 
-[Slides based on Ben Marwick's presentation to the UW Center for Statistics and Social Sciences (12 March 2014)](https://github.com/benmarwick/CSSS-Primer-Reproducible-Research) ([OrcID](http://orcid.org/0000-0001-7879-4531))
-
+Git Slides based on materials from Dr. Çetinkaya-Rundel
 
 
 Licensing: 
@@ -1211,6 +547,6 @@ Licensing:
 
 ## References
 
-See [Rpres file on github](https://raw.github.com/benmarwick/CSSS-Primer-Reproducible-Research/master/CSSS_WI14_Reproducibility.Rpres) for full references and sources
+See Rmd file for full references and sources
 
 
