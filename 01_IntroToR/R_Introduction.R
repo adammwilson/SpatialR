@@ -7,12 +7,8 @@
 #'     fig_width: 7
 #'     fig_height: 6
 #'     keep_md: true
-#'     number_sections: true
-#'     toc: true
-#'     framework   : revealjs
 #' ---
 #'     
-#' 
 #' 
 #' 
 #' ## Variables

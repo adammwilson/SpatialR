@@ -5,7 +5,6 @@ August 31, 2015
 
 
 
-
 ## Variables
 
 ```r
