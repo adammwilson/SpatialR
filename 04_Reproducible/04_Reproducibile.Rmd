@@ -70,22 +70,41 @@ The important stuff is hidden in the `.git` folder.
 
 ## Staging
 <img src="assets/Stage.png" alt="alt text" width="75%">
+
 Select which files you want to commit.
 
 ## Committing
 <img src="assets/Commit.png" alt="alt text" width="100%">
+
 Add a _commit message_ and click commit.
 
 ## Syncing (`push`)
 <img src="assets/Push.png" alt="alt text" width="100%">
+
 Add a _commit message_ and click commit.
+
+## Github
 
 
 ## Git command line from RStudio
+
+RStudio has limited functionality.  
+
 <img src="assets/CommandLine.png" alt="alt text" width="75%">
+
+
+## Git help
+
+```{}
+$ git help <verb>
+$ git <verb> --help
+$ man git-<verb>
+```
+For example, you can get the manpage help for the config command by running `git help config`
 
 ## Git status
 <img src="assets/GitCL.png" alt="alt text" width="75%">
+
 Similar to info in git tab in RStudio
 
 ## Git config
