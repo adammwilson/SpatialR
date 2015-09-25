@@ -9,7 +9,7 @@ output:
       center: "false"
       width: 1080
       highlighter : highlight.js
-      hitheme: dark
+      hitheme: github
       widgets: [mathjax, bootstrap,rCharts]
       keep_md:  true
       pandoc_args: [ "--slide-level", "2" ]
@@ -44,6 +44,56 @@ knitr::opts_chunk$set(cache=T)
 * Introduction to spatial data in R
 
 # Working with Git and GitHub
+
+## Git Has Integrity
+Everything _checksummed_ before storage and then referred by _checksum_. 
+
+> It’s impossible to change the contents of any file or directory without Git knowing. You can’t lose information in transit or get file corruption without Git being able to detect it.
+
+A 40-character hexadecimal SHA-1 hash:
+
+`24b9da6552252987aa493b52f8696cd6d3b00373`
+
+## Checksum
+A way of reducing digital information to a unique ID:
+
+<img src="assets/checksum.jpg" alt="alt text" width="50%">
+
+Git doesn't care about filenames, extensions, etc.  It' the information that matters...
+
+## The 3 states of files
+
+### committed, modified, and staged
+<img src="assets/staging.png" alt="alt text" width="75%">
+
+The important stuff is hidden in the `.git` folder.
+
+## Staging
+<img src="assets/Stage.png" alt="alt text" width="75%">
+Select which files you want to commit.
+
+## Committing
+<img src="assets/Commit.png" alt="alt text" width="100%">
+Add a _commit message_ and click commit.
+
+## Syncing (`push`)
+<img src="assets/Push.png" alt="alt text" width="100%">
+Add a _commit message_ and click commit.
+
+
+## Git command line from RStudio
+<img src="assets/CommandLine.png" alt="alt text" width="75%">
+
+## Git status
+<img src="assets/GitCL.png" alt="alt text" width="75%">
+Similar to info in git tab in RStudio
+
+## Git config
+`git config` shows you all the git configuration settings:
+
+* `user.email`
+* `remote.origin.url`  (e.g. to connect to GitHub)
+* 
 
 ## Branching
 Git branches are 
