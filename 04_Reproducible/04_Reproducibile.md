@@ -41,10 +41,19 @@ Git doesn't care about filenames, extensions, etc.  It' the information that mat
 
 ## The 3 states of files
 
-### committed, modified, and staged
+### staged, modified, committed
 <img src="assets/staging.png" alt="alt text" width="75%">
 
 The important stuff is hidden in the `.git` folder.
+
+## Commit to GitHub from within RStudio
+
+### Steps:
+
+1. Stage
+2. Commit (with a message)
+3. Push
+
 
 ## Staging
 <img src="assets/Stage.png" alt="alt text" width="75%">
@@ -63,8 +72,19 @@ Add a _commit message_ and click commit.
 
 ## Github
 
+<img src="assets/Github.png" alt="alt text" width="100%">
+
+Files are updated/stored on GitHub
+
+## Git File Lifecycle
+
+<img src="assets/Lifecycle.png" alt="alt text" width="100%">
+
 
 ## Git command line from RStudio
+
+RStudio has limited functionality.  
+
 <img src="assets/CommandLine.png" alt="alt text" width="75%">
 
 
@@ -79,6 +99,7 @@ For example, you can get the manpage help for the config command by running `git
 
 ## Git status
 <img src="assets/GitCL.png" alt="alt text" width="75%">
+
 Similar to info in git tab in RStudio
 
 ## Git config
@@ -86,37 +107,47 @@ Similar to info in git tab in RStudio
 
 * `user.email`
 * `remote.origin.url`  (e.g. to connect to GitHub)
-* 
 
 ## Branching
-Git branches are 
+Branches used to develop features isolated from each other. 
+<img src="assets/merge.png" alt="alt text" width="100%">
 
-## Commit to GitHub from within RStudio
+Default: _master_ branch. Use other branches for development/collaboration and merge them back upon completion.
 
-Steps:
+## Basic Branching
 
-1. Stage
-2. Commit (with a message)
-3. Push
+```{}
+$ git checkout -b devel   # create new branch and switch to it
+
+
+$ git checkout master  #switch back to master
+$ git merge devel  #merge in changes from devel branch
+```
+But we won't do much with branching in this course...
+
+## Git can do far more!
+
+Check out the (free) book [ProGIT](https://git-scm.com/book/en/v2)
+
+<img src="assets/progit2.png" alt="alt text" width="30%">
+
 
 # RMarkdown
-
-## RMarkdown
 <img src="assets/Rmarkdown01.png" alt="alt text" width="100%">
 
-## RMarkdown
+## RMarkdown: new file
 <img src="assets/Rmarkdown02.png" alt="alt text" width="100%">
 
-## RMarkdown
-<img src="assets/Rmarkdown03.png" alt="alt text" width="100%">
+## RMarkdown: syntax
+<img src="assets/Rmarkdown03.png" alt="alt text" width="70%">
 
-## RMarkdown
+## RMarkdown: output
 <img src="assets/Rmarkdown04.png" alt="alt text" width="100%">
 
-## RMarkdown
+## RMarkdown: code
 <img src="assets/Rmarkdown05.png" alt="alt text" width="90%">
 
-## Chunk Options
+## RMarkdown: chunks
 Option      default   effect
 ----        ---       ----
 `eval`        `TRUE`      Evalute the code and include the results
@@ -131,32 +162,26 @@ Option      default   effect
 `fig.width`   7           Width in inches for plots
 `fig.height`  7           Height in inches for plots
 
-## RMarkdown
-<img src="assets/Rmarkdown06.png" alt="alt text" width="100%">
-
-## Code Chunks
-All R code to be run must be in a _code chunk_ like this:
-
-```r
-#```{r,eval=F}
-CODE HERE
-#```
-```
-
 ## Chunk examples
 
 R Code Chunks: Displaying Plots
 
 <img src="assets/figure.png" alt="alt text" width="80%">
 
-<img src="04_Reproducibile_files/figure-revealjs/unnamed-chunk-3-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="04_Reproducibile_files/figure-revealjs/unnamed-chunk-2-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 ## Global chunk options
 
 Use  chunk options throughout a document:
 <img src="assets/globalOptions.png" alt="alt text" width="100%">
 
-## Easily visualize on GitHub
+
+## RMarkdown: render
+
+<img src="assets/Rmarkdown06.png" alt="alt text" width="100%">
+
+
+## Visualize .md on GitHub
 
 Update the YAML header to keep the markdown file
 
@@ -182,15 +207,18 @@ output:
 
 And click `knit HTML` to generate the output
 
+## Visualize example
+<img src="assets/ghmd.png" alt="alt text" width="75%">
+
 
 ## Explore markdown functions
 
 1. Use _File -> New File -> R Markdown_ to create a new markdown file.  
 2. Use the Cheatsheet to add sections (`#` and `##`) and some example narrative.  
-3. Try changing changing the species name to your favorite species and re-run the report.  
-4. Stage, Commit, Push!
-5. Explore the markdown file on the GitHub website.  
+3. Stage, Commit, Push!
+4. Explore the markdown file on your GitHub website.  
 
+### Take 15 minutes & ask questions!
 
 ## Colophon
 
