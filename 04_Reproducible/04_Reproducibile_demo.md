@@ -4,7 +4,16 @@ September 2015
 
 
 
-Load these packages in a code chunk:
+## Today's Objectives
+
+* Download and pre-process files from a website
+* Loop through files and import them to R
+* Summarize data as desired
+* Merge them with a spatialPolygon (shapefile)
+* Plot spatial summary
+
+
+## Load packages
 
 
 ```r
@@ -12,19 +21,61 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(maps)
-library(spocc)
+library(ggmap)
 ```
 
 
 # Download data
 
-## Daily ozone data from the EPA
-The data are available from 1990 through 2015, but for now we'll just use 2013:2014.  If you want to extend the analysis, feel free to change this.  
+## EPA _AirData_
+[AirData](http://www3.epa.gov/airquality/airdata/index.html) gives you access to air quality data collected at outdoor monitors across the United States.  
+
+<img src="assets/AirData.png" alt="alt text" width="100%">
+
+
+## Daily air quality observations
+Daily data are available from AirData ([http://aqsdr1.epa.gov/aqsweb/aqstmp/airdata/download_files.html](http://aqsdr1.epa.gov/aqsweb/aqstmp/airdata/download_files.html)) from 1990 through 2015, but for now we'll just use 2013:2014.  If you want to extend the analysis, feel free to change this.  
+
+You can access the associated metadata [here](http://aqsdr1.epa.gov/aqsweb/aqstmp/airdata/FileFormats.html).
+
+
+Create a vector of years to download
 
 ```r
 years=2013:2014
+years
+```
 
-files=paste0("http://aqsdr1.epa.gov/aqsweb/aqstmp/airdata/daily_44201_",years,".zip")
+```
+## [1] 2013 2014
+```
+
+Some data serving websites offer an Application programming interface (API) which allows local software to directly interact with servers.  
+
+> [ROpenSci](https://ropensci.org) project builds libraries to interface with common data APIs.  
+
+
+In this case we'll simple use the URL for the file we want (Daily Ozone 44201).  
+
+<img src="assets/ozone.png" width="80%">
+
+
+To generate URLs for multiple years, you can use `paste()` with a vector.  For example:
+
+
+```r
+paste("File",years,sep="_")
+```
+
+```
+## [1] "File_2013" "File_2014"
+```
+
+Now build the actual URL to the files:
+
+```r
+url="http://aqsdr1.epa.gov/aqsweb/aqstmp/airdata/"
+files=paste0(url,"daily_44201_",years,".zip")
 
 files
 ```
@@ -34,17 +85,34 @@ files
 ## [2] "http://aqsdr1.epa.gov/aqsweb/aqstmp/airdata/daily_44201_2014.zip"
 ```
 
-### Create a directory to hold the data.
+### Data directory
+By default everything goes into working director (see `getwd()`), but we can append a path to put things somewhere else and keep our project organized.
+
+> Be careful with large files inside your Git respository.  Best to keep them outside _or_ add them to .gitignore.
+
 
 ```r
 datadir="data"
 ```
 
-### Write a simple download function
+### Download Function
 
-1. Checks if file already exists
-2. If needed, downloads the file.
-3. Unzips the file into our `datadir`
+Write a simple download function to:
+
+1. Check if file already exists
+2. If needed, download the file.
+3. Unzip the file into our `datadir`
+
+
+For this we need a few new functions:
+
+* `basename()`:  returns just the file name from a path.  e.g. 
+* `file.path()`: assembles a file path from parts (adding "/" as necessary for OS)
+* `file.exists()`:  tests whether a file exists on disk
+* `unzip()`: unzips a file
+* `file.remove()`: deletes a file on disk
+
+
 
 
 ```r
@@ -80,6 +148,22 @@ for(f in files){
 }
 ```
 
+### Or use `lapply()`
+`lapply()`: Apply a Function over a List or Vector
+
+
+```r
+lapply(files, downloadData)
+```
+
+```
+## [[1]]
+## [1] "File exists"
+## 
+## [[2]]
+## [1] "File exists"
+```
+
 
 ## Load Data
 
@@ -87,9 +171,9 @@ for(f in files){
 
 ```r
 loadData <- function(path) { 
-  files <- dir(path, pattern = '\\.csv', full.names = TRUE)
-  tables <- lapply(files, read.csv, stringsAsFactors=F)
-  dplyr::bind_rows(tables)
+  files <- list.files(path, pattern = '[.]csv', full.names = TRUE) # get list of downloaded files
+  tables <- lapply(files, read.csv, stringsAsFactors=F)    # loop over list and read in the files
+  dplyr::bind_rows(tables)    #row bind the tables 
 }
 ```
 
@@ -129,106 +213,245 @@ d
 ##   CBSA.Name (chr), Date.of.Last.Change (chr)
 ```
 
+> If you do not have enough RAM to hold the two files (or it is too slow), you can limit the number of lines you read in by adding `nrow=1000` to the `lapply()` function above.
+
+## Convert Date.Local to R date class
+R has a special class to handle dates.  If the data are in a standardized format (e.g. `2014-01-13`), it's easy to convert with `as.Date()`.  
 
 
 ```r
-d%>%
-  separate(col=Date.Local,into=c("year","month","day"),sep="-")%>%
+d$Date.Local=as.Date(d$Date.Local)
+```
+
+Once in a date format, you can extract and change the format easily with `format()`.  For example:
+
+
+```r
+tdate=d$Date.Local[1:5]
+tdate
+```
+
+```
+## [1] "2013-02-28" "2013-03-01" "2013-03-02" "2013-03-03" "2013-03-04"
+```
+
+```r
+format(tdate,"%Y")  # Y: Year
+```
+
+```
+## [1] "2013" "2013" "2013" "2013" "2013"
+```
+
+```r
+format(tdate,"%m")  # m: 2-digit month
+```
+
+```
+## [1] "02" "03" "03" "03" "03"
+```
+
+```r
+format(tdate,"%m-%d-%y")  # American date format
+```
+
+```
+## [1] "02-28-13" "03-01-13" "03-02-13" "03-03-13" "03-04-13"
+```
+
+See all the `format()` codes with `?strptime`.  For example:
+
+* `%a`  Abbreviated weekday name
+* `%A`  Full weekday name
+* `%b`  Abbreviated month name
+* `%B`  Full month name
+* `%C`  Century (00–99): the integer part of the year divided by 100.
+* `%e`  Day of the month as decimal number (1–31), with a leading space for a single-digit number.
+
+
+### Date math
+
+```r
+tdate+5
+```
+
+```
+## [1] "2013-03-05" "2013-03-06" "2013-03-07" "2013-03-08" "2013-03-09"
+```
+
+```r
+Sys.Date()-tdate
+```
+
+```
+## Time differences in days
+## [1] 941 940 939 938 937
+```
+
+### Add year and month to dataset
+
+Add year and month columns for easy summarizing later:
+
+```r
+d=mutate(d, 
+         year=as.numeric(format(Date.Local,"%Y")),
+         month=as.numeric(format(Date.Local,"%m"))
+         )
+```
+
+## Brief introduction to [`ggplot2`](http://ggplot2.org)
+The _grammar of graphics_:  consistent aesthetics, multidimensional conditioning, and step-by-step plot building.
+
+
+* **dataset** with mappings from variables to aesthetics
+* one or more **layers**, each with one geometric object, one statistical transformation, one position adjustment
+* one **scale** for each aesthetic mapping
+* a **coordinate** system,
+* the **facet** specification (conditioning)
+
+> More on `ggplot2` next week...
+
+### Daily Ozone Timeseries for Amherst, NY
+Use `filter()` to select just the station in Amherst
+
+
+```r
+d_amherst=filter(d, City.Name=="Amherst",State.Name=="New York")
+
+p1=ggplot(d_amherst,                            #specify the dataset
+          aes(x=Date.Local,y=X1st.Max.Value))+  # Specify data and aesthetics (aes)
+  geom_line(col="black")                        # add a geometry
+
+p1
+```
+
+![](04_Reproducibile_demo_files/figure-html/unnamed-chunk-17-1.png) 
+You can easily build upon saved graphics with `+`.  For example, let's add a smoothed line and update the axis labels.
+
+```r
+p1+
+  geom_smooth(span=.2,col="darkred",fill="darkred",size=2)+
+  ylab("Maximum Daily Ozone Concentration (ppm)")+
+  xlab("Date")
+```
+
+```
+## geom_smooth: method="auto" and size of largest group is <1000, so using loess. Use 'method = x' to change the smoothing method.
+```
+
+![](04_Reproducibile_demo_files/figure-html/unnamed-chunk-18-1.png) 
+see `?geom_smooth()` and `?stat_smooth` for details and options of the smoothing algorithm.  
+
+##  Explore multiple sites
+
+First filter to all New York stations.
+
+```r
+d_ny=filter(d, State.Name=="New York")
+```
+
+### Aesthetics
+
+
+```r
+ggplot(d_ny,
+          aes(x=Date.Local,y=X1st.Max.Value,colour=Local.Site.Name))+
+  geom_line(alpha=.5)
+```
+
+![](04_Reproducibile_demo_files/figure-html/unnamed-chunk-20-1.png) 
+
+### Conditioning with `facets`
+
+
+```r
+ggplot(d_ny,                            #specify the dataset
+          aes(x=Date.Local,y=X1st.Max.Value))+  # Specify data and aesthetics (aes)
+  geom_line(col="black")+                        # add a geometry
+  facet_wrap(~Local.Site.Name)
+```
+
+![](04_Reproducibile_demo_files/figure-html/unnamed-chunk-21-1.png) 
+
+
+## Annual metrics
+Now let's use `dplyr` functions to process the daily data into various annual metrics.  
+
+
+```r
+dSummary=d%>%
   group_by(Latitude,Longitude,year)%>%
-  summarise(mean=mean(Arithmetic.Mean,na.rm=T))
-```
-
-```
-## Source: local data frame [2,596 x 4]
-## Groups: Latitude, Longitude [?]
-## 
-##    Latitude  Longitude  year        mean
-##       (dbl)      (dbl) (chr)       (dbl)
-## 1  18.17794  -65.91548  2013 0.005603086
-## 2  18.17794  -65.91548  2014 0.013053035
-## 3  18.42009  -66.15062  2014 0.008434862
-## 4  18.44077  -66.12653  2013 0.006676850
-## 5  18.44077  -66.12653  2014 0.004670354
-## 6  21.30338 -157.87117  2013 0.020411669
-## 7  21.30338 -157.87117  2014 0.021360855
-## 8  21.32374 -158.08861  2013 0.026238105
-## 9  21.32374 -158.08861  2014 0.021141490
-## 10 25.58638  -80.32681  2013 0.027426165
-## ..      ...        ...   ...         ...
+  summarise(
+    mean=mean(Arithmetic.Mean,na.rm=T),
+    max=max(X1st.Max.Value))
 ```
 
 
-## Get polygon layer of states
+### Plot annual metrics spatially
 
 ```r
-usa=map("state")
+ggplot(dSummary,aes(x=Longitude,y=Latitude))+   # Specify data and aesthetics (aes)
+  geom_point(col="red")                    # add a geometry
 ```
 
-![](04_Reproducibile_demo_files/figure-html/unnamed-chunk-11-1.png) 
+![](04_Reproducibile_demo_files/figure-html/unnamed-chunk-23-1.png) 
 
-```r
-d%>%filter(State.Name=="New York")%>%
-  select(Latitude, Longitude, County.Name, Address)%>% distinct()
-```
-
-```
-## Source: local data frame [31 x 4]
-## 
-##    Latitude Longitude County.Name
-##       (dbl)     (dbl)       (chr)
-## 1  42.68075 -73.75733      Albany
-## 2  40.81618 -73.90200       Bronx
-## 3  40.86790 -73.87809       Bronx
-## 4  42.49963 -79.31881  Chautauqua
-## 5  41.78555 -73.74136    Dutchess
-## 6  42.99328 -78.77153        Erie
-## 7  44.36608 -73.90312       Essex
-## 8  44.39308 -73.85890       Essex
-## 9  43.97310 -74.22320       Essex
-## 10 44.98058 -74.69500    Franklin
-## ..      ...       ...         ...
-## Variables not shown: Address (chr)
-```
-
-## Step 2: Load data
 
 
 
 ```r
-## define which species to query
-sp='Turdus migratorius'
+ggplot(dSummary,aes(x=Longitude,y=Latitude,col=max,order=max))+
+  scale_color_gradientn(colours=c("blue","yellow","red"))+
+  facet_grid(year~.)+
+  geom_point()+
+  coord_equal()
 ```
-This can take a few seconds.
 
-## Step 3: Map it
+![](04_Reproducibile_demo_files/figure-html/unnamed-chunk-24-1.png) 
 
+
+## Brief introduction to [`ggmap`](https://cran.r-project.org/web/packages/ggmap/index.html)
+
+Functions to visualize spatial data and models on top of maps from various online sources (e.g Google Maps and Stamen Maps). 
+
+### Example Styles:
+
+<img src="assets/ggmap.png" width="80%"> from [ggmap cheatsheet](https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/ggmap/ggmapCheatsheet.pdf)
+Use `get_map()` to download the map:
 
 ```r
-# Load coastline
-map=map_data("world")
-
-#ggplot(d,aes(x=longitude,y=latitude))+
-##  geom_polygon(aes(x=long,y=lat,group=group,order=order),data=map)+
-#  geom_point(col="red")+
-#  coord_equal()
+map <- get_map(location = 'USA', zoom = 4, source="stamen", maptype="toner")
 ```
 
 
-## Step 6:  Explore markdown functions
+Plot it with `ggmap()`
 
-1. Use the Cheatsheet to add sections and some example narrative.  
-2. Try changing changing the species name to your favorite species and re-run the report.  
+```r
+ggmap(map) +
+  geom_point(data=dSummary,aes(x=Longitude,y=Latitude,col=max,order=max))+
+  scale_color_gradientn(colours=c("darkblue","blue","yellow","red"))+
+  facet_wrap(~year)
+```
+
+![](04_Reproducibile_demo_files/figure-html/unnamed-chunk-26-1.png) 
+
+
+## Exercise: Explore markdown functions
+
+1. Clean up this .Rmd file as a simple descriptive report about Ozone in the US.  
+2. Use the Markdown cheatsheet to add sections and some example narrative.  
+3. Try changing changing the summaries or plots and re-run the report.  
 3. Stage, Commit, Push!
 4. Explore the markdown file on the GitHub website.  
+
+## Next week:
+
+* Spatial data classes
+* More `ggplot2`
 
 
 ## Colophon
 
-Licensing: 
+### Licensing: 
 * Presentation: [CC-BY-3.0 ](http://creativecommons.org/licenses/by/3.0/us/)
 * Source code: [MIT](http://opensource.org/licenses/MIT) 
-
-
-## References
-
-See Rmd file for full references and sources

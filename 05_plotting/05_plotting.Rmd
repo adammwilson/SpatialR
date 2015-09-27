@@ -1,0 +1,70 @@
+---
+title: "Plotting"
+author: "Adam M. Wilson"
+date: "September 2015"
+output: 
+  revealjs::revealjs_presentation:
+      theme: white
+      transition: fade
+      center: "false"
+      width: 1080
+      highlighter : highlight.js
+      hitheme: github
+      widgets: [mathjax, bootstrap,rCharts]
+      keep_md:  true
+      pandoc_args: [ "--slide-level", "2" ]
+  html_document:
+    keep_md: true
+
+---
+
+```{r, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
+## This chunk automatically generates a text .R version of this script when running within knitr.  You do not need to run this...
+input  = knitr::current_input()  # filename of input document
+output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
+knitr::purl(input,output,documentation=2,quiet=T)
+knitr::opts_chunk$set(cache=T)
+```
+
+
+# Overview
+
+### Questions from last week?
+
+#  Today
+
+### Outline
+* More Git
+* More Markdown
+* Introduction to `ggplot2()`
+* Introduction to spatial data in R
+
+
+presentation: https://rpubs.com/timwinke/ggplot2workshop
+overview of various plots: http://docs.ggplot2.org/current/index.html
+cheatsheet: https://www.rstudio.com/wp-content/uploads/2015/04/ggplot2-cheatsheet.pdf
+
+
+## Polygon layer of states
+
+Download a shapefile of the U.S. states from [Census.gov](https://www.census.gov/geo/maps-data/data/cbf/cbf_state.html):
+```{r}
+states=file.path(datadir,"cb_2014_us_state_5m.shp")
+if(!file.exists(states)){
+  download.file("http://www2.census.gov/geo/tiger/GENZ2014/shp/cb_2014_us_state_5m.zip",
+                destfile=file.path(datadir,"states.zip"))
+  unzip(file.path(datadir,"states.zip"),exdir=datadir)
+}
+usa=readShapePoly(states)
+```
+
+
+### Take 15 minutes & ask questions!
+
+
+## Colophon
+
+Licensing: 
+* Presentation: [CC-BY-3.0 ](http://creativecommons.org/licenses/by/3.0/us/)
+* Source code: [MIT](http://opensource.org/licenses/MIT) 
+
