@@ -8,39 +8,97 @@
 #' ---
 #' 
 #' 
-#' Load these packages in a code chunk:
+#' ## Today's Objectives
+#' 
+#' * Download and pre-process files from a website
+#' * Loop through files and import them to R
+#' * Summarize data as desired
+#' * Plot timeseries & spatial distribution
+#' 
+#' 
+#' ## Load packages
 #' 
 ## ---- message=F----------------------------------------------------------
 library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(maps)
-library(spocc)
+library(ggmap)
 
 #' 
 #' 
 #' # Download data
 #' 
-#' ## Daily ozone data from the EPA
-#' The data are available from 1990 through 2015, but for now we'll just use 2013:2014.  If you want to extend the analysis, feel free to change this.  
+#' ## EPA _AirData_
+#' [AirData](http://www3.epa.gov/airquality/airdata/index.html) gives you access to air quality data collected at outdoor monitors across the United States.  
+#' 
+#' <img src="assets/AirData.png" alt="alt text" width="100%">
+#' 
+#' 
+#' ## Daily air quality observations
+#' Daily data are available from AirData ([http://aqsdr1.epa.gov/aqsweb/aqstmp/airdata/download_files.html](http://aqsdr1.epa.gov/aqsweb/aqstmp/airdata/download_files.html)) from 1990 through 2015, but for now we'll just use 2013:2014.  If you want to extend the analysis, feel free to change this.  
+#' 
+#' You can access the associated metadata [here](http://aqsdr1.epa.gov/aqsweb/aqstmp/airdata/FileFormats.html).
+#' 
+#' 
+#' Create a vector of years to download
 ## ------------------------------------------------------------------------
 years=2013:2014
+years
 
-files=paste0("http://aqsdr1.epa.gov/aqsweb/aqstmp/airdata/daily_44201_",years,".zip")
+
+#' 
+#' Some data serving websites offer an Application programming interface (API) which allows local software to directly interact with servers.  
+#' 
+#' > [ROpenSci](https://ropensci.org) project builds libraries to interface with common data APIs.  
+#' 
+#' 
+#' In this case we'll simple use the URL for the file we want (Daily Ozone 44201).  
+#' 
+#' <img src="assets/ozone.png" width="80%">
+#' 
+#' 
+#' To generate URLs for multiple years, you can use `paste()` with a vector.  For example:
+#' 
+## ------------------------------------------------------------------------
+paste("File",years,sep="_")
+
+#' 
+#' Now build the actual URL to the files:
+## ------------------------------------------------------------------------
+url="http://aqsdr1.epa.gov/aqsweb/aqstmp/airdata/"
+files=paste0(url,"daily_44201_",years,".zip")
 
 files
 
 #' 
-#' ### Create a directory to hold the data.
+#' ### Data directory
+#' By default everything goes into working director (see `getwd()`), but we can append a path to put things somewhere else and keep our project organized.
+#' 
+#' > Be careful with large files inside your Git respository.  Best to keep them outside _or_ add them to .gitignore.
+#' 
 ## ------------------------------------------------------------------------
 datadir="data"
 
 #' 
-#' ### Write a simple download function
+#' ### Download Function
 #' 
-#' 1. Checks if file already exists
-#' 2. If needed, downloads the file.
-#' 3. Unzips the file into our `datadir`
+#' Write a simple download function to:
+#' 
+#' 1. Check if file already exists
+#' 2. If needed, download the file.
+#' 3. Unzip the file into our `datadir`
+#' 
+#' 
+#' For this we need a few new functions:
+#' 
+#' * `basename()`:  returns just the file name from a path.  e.g. 
+#' * `file.path()`: assembles a file path from parts (adding "/" as necessary for OS)
+#' * `file.exists()`:  tests whether a file exists on disk
+#' * `unzip()`: unzips a file
+#' * `file.remove()`: deletes a file on disk
+#' 
+#' 
 #' 
 ## ------------------------------------------------------------------------
 downloadData=function(file,overwrite=F){
@@ -69,15 +127,22 @@ for(f in files){
 }
 
 #' 
+#' ### Or use `lapply()`
+#' `lapply()`: Apply a Function over a List or Vector
+#' 
+## ------------------------------------------------------------------------
+lapply(files, downloadData)
+
+#' 
 #' 
 #' ## Load Data
 #' 
 #' ### Another function to load all available datasets
 ## ------------------------------------------------------------------------
 loadData <- function(path) { 
-  files <- dir(path, pattern = '\\.csv', full.names = TRUE)
-  tables <- lapply(files, read.csv, stringsAsFactors=F)
-  dplyr::bind_rows(tables)
+  files <- list.files(path, pattern = '[.]csv', full.names = TRUE) # get list of downloaded files
+  tables <- lapply(files, read.csv, stringsAsFactors=F)    # loop over list and read in the files
+  dplyr::bind_rows(tables)    #row bind the tables 
 }
 
 #' 
@@ -91,62 +156,178 @@ d=loadData(datadir)
 d
 
 #' 
+#' > If you do not have enough RAM to hold the two files (or it is too slow), you can limit the number of lines you read in by adding `nrow=1000` to the `lapply()` function above.
+#' 
+#' ## Convert Date.Local to R date class
+#' R has a special class to handle dates.  If the data are in a standardized format (e.g. `2014-01-13`), it's easy to convert with `as.Date()`.  
 #' 
 ## ------------------------------------------------------------------------
-d%>%
-  separate(col=Date.Local,into=c("year","month","day"),sep="-")%>%
+d$Date.Local=as.Date(d$Date.Local)
+
+#' 
+#' Once in a date format, you can extract and change the format easily with `format()`.  For example:
+#' 
+## ------------------------------------------------------------------------
+tdate=d$Date.Local[1:5]
+tdate
+format(tdate,"%Y")  # Y: Year
+format(tdate,"%m")  # m: 2-digit month
+format(tdate,"%m-%d-%y")  # American date format
+
+#' 
+#' See all the `format()` codes with `?strptime`.  For example:
+#' 
+#' * `%a`  Abbreviated weekday name
+#' * `%A`  Full weekday name
+#' * `%b`  Abbreviated month name
+#' * `%B`  Full month name
+#' * `%C`  Century (00–99): the integer part of the year divided by 100.
+#' * `%e`  Day of the month as decimal number (1–31), with a leading space for a single-digit number.
+#' 
+#' 
+#' ### Date math
+## ------------------------------------------------------------------------
+tdate+5
+
+Sys.Date()-tdate
+
+#' 
+#' ### Add year and month to dataset
+#' 
+#' Add year and month columns for easy summarizing later:
+## ------------------------------------------------------------------------
+d=mutate(d, 
+         year=as.numeric(format(Date.Local,"%Y")),
+         month=as.numeric(format(Date.Local,"%m"))
+         )
+
+#' 
+#' ## Brief introduction to [`ggplot2`](http://ggplot2.org)
+#' The _grammar of graphics_:  consistent aesthetics, multidimensional conditioning, and step-by-step plot building.
+#' 
+#' 
+#' * **dataset** with mappings from variables to aesthetics
+#' * one or more **layers**, each with one geometric object, one statistical transformation, one position adjustment
+#' * one **scale** for each aesthetic mapping
+#' * a **coordinate** system,
+#' * the **facet** specification (conditioning)
+#' 
+#' > More on `ggplot2` next week...
+#' 
+#' ### Daily Ozone Timeseries for Amherst, NY
+#' Use `filter()` to select just the station in Amherst
+#' 
+## ------------------------------------------------------------------------
+d_amherst=filter(d, City.Name=="Amherst",State.Name=="New York")
+
+p1=ggplot(d_amherst,                            #specify the dataset
+          aes(x=Date.Local,y=X1st.Max.Value))+  # Specify data and aesthetics (aes)
+  geom_line(col="black")                        # add a geometry
+
+p1
+
+#' You can easily build upon saved graphics with `+`.  For example, let's add a smoothed line and update the axis labels.
+## ------------------------------------------------------------------------
+p1+
+  geom_smooth(span=.2,col="darkred",fill="darkred",size=2)+
+  ylab("Maximum Daily Ozone Concentration (ppm)")+
+  xlab("Date")
+
+
+#' see `?geom_smooth()` and `?stat_smooth` for details and options of the smoothing algorithm.  
+#' 
+#' ##  Explore multiple sites
+#' 
+#' First filter to all New York stations.
+## ------------------------------------------------------------------------
+d_ny=filter(d, State.Name=="New York")
+
+#' 
+#' ### Aesthetics
+#' 
+## ------------------------------------------------------------------------
+ggplot(d_ny,
+          aes(x=Date.Local,y=X1st.Max.Value,colour=Local.Site.Name))+
+  geom_line(alpha=.5)
+
+#' 
+#' ### Conditioning with `facets`
+#' 
+## ------------------------------------------------------------------------
+ggplot(d_ny,                            #specify the dataset
+          aes(x=Date.Local,y=X1st.Max.Value))+  # Specify data and aesthetics (aes)
+  geom_line(col="black")+                        # add a geometry
+  facet_wrap(~Local.Site.Name)
+
+#' 
+#' 
+#' ## Annual metrics
+#' Now let's use `dplyr` functions to process the daily data into various annual metrics.  
+#' 
+## ------------------------------------------------------------------------
+dSummary=d%>%
   group_by(Latitude,Longitude,year)%>%
-  summarise(mean=mean(Arithmetic.Mean,na.rm=T))
+  summarise(
+    mean=mean(Arithmetic.Mean,na.rm=T),
+    max=max(X1st.Max.Value))
 
 #' 
 #' 
-#' ## Get polygon layer of states
+#' ### Plot annual metrics spatially
 ## ------------------------------------------------------------------------
-usa=map("state")
-
-d%>%filter(State.Name=="New York")%>%
-  select(Latitude, Longitude, County.Name, Address)%>% distinct()
-
+ggplot(dSummary,aes(x=Longitude,y=Latitude))+   # Specify data and aesthetics (aes)
+  geom_point(col="red")                    # add a geometry
 
 #' 
-#' ## Step 2: Load data
 #' 
-#' 
-## ------------------------------------------------------------------------
-## define which species to query
-sp='Turdus migratorius'
-
-
-#' This can take a few seconds.
-#' 
-#' ## Step 3: Map it
 #' 
 ## ---- fig.width=6--------------------------------------------------------
-# Load coastline
-map=map_data("world")
-
-#ggplot(d,aes(x=longitude,y=latitude))+
-##  geom_polygon(aes(x=long,y=lat,group=group,order=order),data=map)+
-#  geom_point(col="red")+
-#  coord_equal()
+ggplot(dSummary,aes(x=Longitude,y=Latitude,col=max,order=max))+
+  scale_color_gradientn(colours=c("blue","yellow","red"))+
+  facet_grid(year~.)+
+  geom_point()+
+  coord_equal()
 
 #' 
 #' 
-#' ## Step 6:  Explore markdown functions
+#' ## Brief introduction to [`ggmap`](https://cran.r-project.org/web/packages/ggmap/index.html)
 #' 
-#' 1. Use the Cheatsheet to add sections and some example narrative.  
-#' 2. Try changing changing the species name to your favorite species and re-run the report.  
+#' Functions to visualize spatial data and models on top of maps from various online sources (e.g Google Maps and Stamen Maps). 
+#' 
+#' ### Example Styles:
+#' 
+#' <img src="assets/ggmap.png" width="80%"> from [ggmap cheatsheet](https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/ggmap/ggmapCheatsheet.pdf)
+#' Use `get_map()` to download the map:
+## ----message=F-----------------------------------------------------------
+map <- get_map(location = 'USA', zoom = 4, source="stamen", maptype="toner")
+
+#' 
+#' 
+#' Plot it with `ggmap()`
+## ---- warning=F----------------------------------------------------------
+ggmap(map) +
+  geom_point(data=dSummary,aes(x=Longitude,y=Latitude,col=max,order=max))+
+  scale_color_gradientn(colours=c("darkblue","blue","yellow","red"))+
+  facet_wrap(~year)
+
+#' 
+#' 
+#' ## Exercise: Explore markdown functions
+#' 
+#' 1. Clean up this .Rmd file as a simple descriptive report about Ozone in the US.  
+#' 2. Use the Markdown cheatsheet to add formatting and some example narrative.  
+#' 3. Try changing the summaries or plots and re-run the report.  
 #' 3. Stage, Commit, Push!
 #' 4. Explore the markdown file on the GitHub website.  
+#' 
+#' ## Next week:
+#' 
+#' * Spatial data classes
+#' * More `ggplot2`
 #' 
 #' 
 #' ## Colophon
 #' 
-#' Licensing: 
+#' ### Licensing: 
 #' * Presentation: [CC-BY-3.0 ](http://creativecommons.org/licenses/by/3.0/us/)
 #' * Source code: [MIT](http://opensource.org/licenses/MIT) 
-#' 
-#' 
-#' ## References
-#' 
-#' See Rmd file for full references and sources

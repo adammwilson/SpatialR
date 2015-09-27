@@ -4,7 +4,7 @@
 #' date: "September 2015"
 #' output: 
 #'   revealjs::revealjs_presentation:
-#'       theme: white
+#'       theme: sky
 #'       transition: fade
 #'       center: "false"
 #'       width: 1080
@@ -83,7 +83,7 @@
 #' ## Syncing (`push`)
 #' <img src="assets/Push.png" alt="alt text" width="100%">
 #' 
-#' Add a _commit message_ and click commit.
+#' Click the green arrow to sync with GitHub.
 #' 
 #' ## Github
 #' 
@@ -146,6 +146,11 @@
 #' 
 #' <img src="assets/progit2.png" alt="alt text" width="30%">
 #' 
+#' 
+#' Or the [cheatsheet](https://training.github.com/kit/downloads/github-git-cheat-sheet.pdf).
+#' 
+#' ## Philosphy  
+#' Remember, the data and code are _real_, the products (tables, figures) are ephemeral...  
 #' 
 #' # RMarkdown
 #' <img src="assets/Rmarkdown01.png" alt="alt text" width="100%">
@@ -226,14 +231,18 @@ plot(cars)
 #' <img src="assets/ghmd.png" alt="alt text" width="75%">
 #' 
 #' 
-#' ## Explore markdown functions
+#' ## Explore markdown<->Git
 #' 
 #' 1. Use _File -> New File -> R Markdown_ to create a new markdown file.  
 #' 2. Use the Cheatsheet to add sections (`#` and `##`) and some example narrative.  
-#' 3. Stage, Commit, Push!
+#' 3. `Stage`, `Commit`, `Push`!
+#' 4. Make more changes then `Stage`, `Commit`, `Push`!
 #' 4. Explore the markdown file on your GitHub website.  
 #' 
-#' ### Take 15 minutes & ask questions!
+#' <br>
+#' 
+#' ### Take 10 minutes & ask questions!
+#' 
 #' 
 #' ## Colophon
 #' 
@@ -241,7 +250,3 @@ plot(cars)
 #' * Presentation: [CC-BY-3.0 ](http://creativecommons.org/licenses/by/3.0/us/)
 #' * Source code: [MIT](http://opensource.org/licenses/MIT) 
 #' 
-#' 
-#' ## References
-#' 
-#' See Rmd file for full references and sources
