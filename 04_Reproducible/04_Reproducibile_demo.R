@@ -13,12 +13,7 @@
 #' * Download and pre-process files from a website
 #' * Loop through files and import them to R
 #' * Summarize data as desired
-<<<<<<< HEAD
 #' * Plot timeseries & spatial distribution
-=======
-#' * Merge them with a spatialPolygon (shapefile)
-#' * Plot spatial summary
->>>>>>> 65ca09b89e1a2bf944671e87b8f2533a95dba3d9
 #' 
 #' 
 #' ## Load packages
@@ -297,7 +292,7 @@ ggplot(dSummary,aes(x=Longitude,y=Latitude,col=max,order=max))+
 #' 
 #' ## Brief introduction to [`ggmap`](https://cran.r-project.org/web/packages/ggmap/index.html)
 #' 
-#' Functions to visualize spatial data and models on top of maps from various online sources (e.g Google Maps and Stamen Maps). 
+#' Functions to visualize spatial data and models on top of maps from various online sources (e.g Google Maps and [Stamen Maps](http://stamen.com)). 
 #' 
 #' ### Example Styles:
 #' 
@@ -320,15 +315,10 @@ ggmap(map) +
 #' ## Exercise: Explore markdown functions
 #' 
 #' 1. Clean up this .Rmd file as a simple descriptive report about Ozone in the US.  
-<<<<<<< HEAD
-#' 2. Use the Markdown cheatsheet to add formatting and some example narrative.  
-#' 3. Try changing the summaries or plots and re-run the report.  
-=======
 #' 2. Use the Markdown cheatsheet to add sections and some example narrative.  
 #' 3. Try changing changing the summaries or plots and re-run the report.  
->>>>>>> 65ca09b89e1a2bf944671e87b8f2533a95dba3d9
-#' 3. Stage, Commit, Push!
-#' 4. Explore the markdown file on the GitHub website.  
+#' 4. Stage, Commit, Push!
+#' 5. Explore the markdown file on the GitHub website.  
 #' 
 #' ## Next week:
 #' 
