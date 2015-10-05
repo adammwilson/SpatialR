@@ -13,9 +13,6 @@ output:
       widgets: [mathjax, bootstrap,rCharts]
       keep_md:  true
       pandoc_args: [ "--slide-level", "2" ]
-  html_document:
-    keep_md: true
-
 ---
 
 ```{r, echo=FALSE, message=FALSE, results='hide', purl=FALSE}

@@ -200,7 +200,7 @@ R Code Chunks: Displaying Plots
 
 <img src="assets/figure.png" alt="alt text" width="80%">
 
-<img src="04_Reproducibile_files/figure-revealjs/unnamed-chunk-2-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="04_Reproducibile_files/figure-html/unnamed-chunk-2-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 ## Global chunk options
 

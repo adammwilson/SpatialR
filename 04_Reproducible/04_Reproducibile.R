@@ -3,6 +3,10 @@
 #' author: "Adam M. Wilson"
 #' date: "September 2015"
 #' output: 
+#'   html_document:
+#'       keep_md: true
+#'       number_sections: true
+#'       theme: cerulean
 #'   revealjs::revealjs_presentation:
 #'       theme: sky
 #'       transition: fade
@@ -13,9 +17,6 @@
 #'       widgets: [mathjax, bootstrap,rCharts]
 #'       keep_md:  true
 #'       pandoc_args: [ "--slide-level", "2" ]
-#'   html_document:
-#'     keep_md: true
-#' 
 #' ---
 #' 
 #' 
