@@ -463,9 +463,9 @@ sids &lt;-<span class="st"> </span><span class="kw">readShapeSpatial</span>(file
 <p>Transform (<em>warp</em>) projection from one to another with <code>spTransform</code></p>
 </section><section class="slide level2">
 
-<p>The <em>eBird</em> data should all be in from GPS (WGS84):</p>
+<p>The <em>eBird</em> data should all be from GPS (WGS84):</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">proj4string</span>(d)=<span class="kw">CRS</span>(<span class="st">&quot;+init=epsg:4326&quot;</span>)</code></pre>
-<p>And put on the US National Atlas Equal Area (Lambert azimuthal equal-area projection):</p>
+<p>Project it to the US National Atlas Equal Area (Lambert azimuthal equal-area projection):</p>
 <pre class="sourceCode r"><code class="sourceCode r">dUS =<span class="st"> </span><span class="kw">spTransform</span>(d,<span class="kw">CRS</span>(<span class="st">&quot;+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs&quot;</span>))</code></pre>
 <p>Compare the <em>bounding box</em>:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bbox</span>(d)</code></pre>
@@ -476,7 +476,8 @@ sids &lt;-<span class="st"> </span><span class="kw">readShapeSpatial</span>(file
 <pre><code>##                min     max
 ## coords.x1 -2871949 2508220
 ## coords.x2 -1538118 3671653</code></pre>
-</section><section id="colophon" class="slide level2">
+</section></section>
+<section><section id="summary" class="titleslide slide level1"><h1>Summary</h1></section><section id="colophon" class="slide level2">
 <h1>Colophon</h1>
 <p>Sources:</p>
 <ul>

@@ -538,14 +538,14 @@ Transform (_warp_) projection from one to another with `spTransform`
 
 ---
 
-The _eBird_ data should all be in from GPS (WGS84):
+The _eBird_ data should all be from GPS (WGS84):
 
 
 ```r
 proj4string(d)=CRS("+init=epsg:4326")
 ```
 
-And put on the US National Atlas Equal Area (Lambert azimuthal equal-area projection):
+Project it to the US National Atlas Equal Area (Lambert azimuthal equal-area projection):
 
 ```r
 dUS = spTransform(d,CRS("+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs"))
@@ -572,6 +572,11 @@ bbox(dUS)
 ## coords.x1 -2871949 2508220
 ## coords.x2 -1538118 3671653
 ```
+
+# Summary
+
+Coming up:  `Raster` package for working with raster data
+
 
 
 ## Colophon

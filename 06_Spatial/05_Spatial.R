@@ -289,13 +289,13 @@ str(sp)
 #' 
 #' ---
 #' 
-#' The _eBird_ data should all be in from GPS (WGS84):
+#' The _eBird_ data should all be from GPS (WGS84):
 #' 
 ## ------------------------------------------------------------------------
 proj4string(d)=CRS("+init=epsg:4326")
 
 #' 
-#' And put on the US National Atlas Equal Area (Lambert azimuthal equal-area projection):
+#' Project it to the US National Atlas Equal Area (Lambert azimuthal equal-area projection):
 ## ------------------------------------------------------------------------
 dUS = spTransform(d,CRS("+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs"))
 
@@ -305,6 +305,11 @@ dUS = spTransform(d,CRS("+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=63709
 bbox(d)
 bbox(dUS)
 
+#' 
+#' # Summary
+#' 
+#' Coming up:  `Raster` package for working with raster data
+#' 
 #' 
 #' 
 #' ## Colophon
