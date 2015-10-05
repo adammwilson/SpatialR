@@ -17,8 +17,24 @@
 #' 
 #' ## Today
 #' 
-#' 1. `ggplot` graphics
-#' 2. spatial (vector) data with `sp` package
+#' 1. Projects
+#' 2. `ggplot` graphics
+#' 3. spatial (vector) data with `sp` package
+#' 
+#' 
+#' ## Projects
+#' 
+#' * public transit system
+#' * Precision agriculture
+#' * temperature change and greenhouse gases
+#' * near-bed hydrodynamics and mussels
+#' * trajectory-clustering of the Fishing Boat Mutual Aid Group
+#' * Ice time of Lake Erie 
+#' * demographic factors related to the oral health
+#' * dynamic precipitation patterns
+#' * air pollution and diverse health outcomes
+#' * migration flows
+#' * Population Segregation from 1990 to 2010 in Erie County, New York
 #' 
 #' ## [`ggplot2`](http://ggplot2.org)
 #' The _grammar of graphics_:  consistent aesthetics, multidimensional conditioning, and step-by-step plot building.
@@ -188,6 +204,11 @@ d +
 #' 2. A smooth ('loess') curve
 #' 3. a "rug" to the plot
 #' 
+#' ```
+#' p <- ggplot(mtcars, aes(x=wt, y=mpg))
+#' p + geom_point()
+#' ```
+#' 
 #' ---
 #' 
 ## ----message=F-----------------------------------------------------------
@@ -337,7 +358,13 @@ m + stat_density2d(aes(fill = ..level..), geom="polygon") +
 #' 
 #' Experiment with the number of bins to find one that works.  
 #' 
-#' See `?stat_binhex` for details
+#' See `?stat_binhex` for details.
+#' 
+#' ```
+#' m <- ggplot(geyser, aes(x = duration, y = waiting))
+#' ```
+#' 
+#' 
 #' 
 #' ---
 #' 
@@ -429,15 +456,19 @@ b +
 #' 
 #' ## Your turn
 #' 
-#' Edit the contour plot of the geyser data to use a sequential brewer palette: 
+#' Edit the contour plot of the geyser data:
 #' 
-## ------------------------------------------------------------------------
-m +
-  stat_density2d(aes(fill = ..level..), geom="polygon") + 
-  geom_point(col="red")
-
+#' 1. Reduce the size of the points
+#' 2. Use a sequential brewer palette (select from [colorbrewer2.org](http://colorbrewer2.org)) 
+#' 3. Add informative x and y labels
 #' 
-#' Note: use`scale_fill_distiller()` rather than `scale_fill_brewer()` for continuous data
+#' ```
+#' m +
+#'   stat_density2d(aes(fill = ..level..), geom="polygon") + 
+#'   geom_point(col="red")
+#' ```
+#' 
+#' Note:  `scale_fill_distiller()` rather than `scale_fill_brewer()` for continuous data
 #' 
 #' ---
 #' 

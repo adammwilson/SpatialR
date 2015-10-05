@@ -6,8 +6,24 @@ October 2015
 
 ## Today
 
-1. `ggplot` graphics
-2. spatial (vector) data with `sp` package
+1. Projects
+2. `ggplot` graphics
+3. spatial (vector) data with `sp` package
+
+
+## Projects
+
+* public transit system
+* Precision agriculture
+* temperature change and greenhouse gases
+* near-bed hydrodynamics and mussels
+* trajectory-clustering of the Fishing Boat Mutual Aid Group
+* Ice time of Lake Erie 
+* demographic factors related to the oral health
+* dynamic precipitation patterns
+* air pollution and diverse health outcomes
+* migration flows
+* Population Segregation from 1990 to 2010 in Erie County, New York
 
 ## [`ggplot2`](http://ggplot2.org)
 The _grammar of graphics_:  consistent aesthetics, multidimensional conditioning, and step-by-step plot building.
@@ -215,6 +231,11 @@ Edit plot `p` above to include:
 2. A smooth ('loess') curve
 3. a "rug" to the plot
 
+```
+p <- ggplot(mtcars, aes(x=wt, y=mpg))
+p + geom_point()
+```
+
 ---
 
 
@@ -392,7 +413,13 @@ Edit plot `m` to include:
 
 Experiment with the number of bins to find one that works.  
 
-See `?stat_binhex` for details
+See `?stat_binhex` for details.
+
+```
+m <- ggplot(geyser, aes(x = duration, y = waiting))
+```
+
+
 
 ---
 
@@ -512,18 +539,19 @@ b +
 
 ## Your turn
 
-Edit the contour plot of the geyser data to use a sequential brewer palette: 
+Edit the contour plot of the geyser data:
 
+1. Reduce the size of the points
+2. Use a sequential brewer palette (select from [colorbrewer2.org](http://colorbrewer2.org)) 
+3. Add informative x and y labels
 
-```r
+```
 m +
   stat_density2d(aes(fill = ..level..), geom="polygon") + 
   geom_point(col="red")
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-33-1.png) 
-
-Note: use`scale_fill_distiller()` rather than `scale_fill_brewer()` for continuous data
+Note:  `scale_fill_distiller()` rather than `scale_fill_brewer()` for continuous data
 
 ---
 
@@ -538,7 +566,7 @@ m + stat_density2d(aes(fill = ..level..), geom="polygon") +
   ylab("Waiting time (minutes)")
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-34-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-33-1.png) 
 
 ---
 
@@ -555,7 +583,7 @@ m + stat_density2d(aes(fill = ..density..), geom="tile",contour=F) +
   ylab("Waiting time (minutes)")
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-35-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-34-1.png) 
 
 
 ---
@@ -584,7 +612,7 @@ sp <- ggplot(dat, aes(xval, yval)) + geom_point()
 sp
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-37-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-36-1.png) 
 
 <small> Example from [R Cookbook](http://www.cookbook-r.com/Graphs/Axes_(ggplot2)/) </small>
 
@@ -597,7 +625,7 @@ log10 scaling of the y axis (with visually-equal spacing)
 sp + scale_y_log10()
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-38-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-37-1.png) 
 
 ## Coordinate Systems
 
@@ -617,7 +645,7 @@ sp + scale_y_log10()
 ggplot(diamonds, aes(clarity, fill=cut)) + geom_bar()
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-39-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-38-1.png) 
 
 ---
 
@@ -629,7 +657,7 @@ ggplot(diamonds, aes(clarity, fill=cut)) + geom_bar()
 ggplot(diamonds, aes(clarity, fill=cut)) + geom_bar(position="dodge")
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-40-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-39-1.png) 
 
 
 # Facets
@@ -644,7 +672,7 @@ ggplot(mpg, aes(x = cty, y = hwy, color = factor(cyl))) +
   facet_wrap(~year)
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-41-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-40-1.png) 
 
 ---
 
@@ -657,7 +685,7 @@ ggplot(mpg, aes(x = cty, y = hwy, color = factor(cyl))) +
   facet_grid(year~cyl)
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-42-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-41-1.png) 
 
 Very useful for timeseries of spatial data.
 
@@ -701,7 +729,7 @@ p=ggplot(mpg, aes(x = cty, y = hwy, color = factor(cyl))) +
 p
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-45-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-44-1.png) 
 
 --- 
 
@@ -711,7 +739,7 @@ p
 p + theme_solarized()
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-46-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-45-1.png) 
 
 --- 
 
@@ -721,7 +749,7 @@ p + theme_solarized()
 p +  theme_solarized(light=FALSE)
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-47-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-46-1.png) 
 
 --- 
 
@@ -731,7 +759,7 @@ p +  theme_solarized(light=FALSE)
 p + theme_excel() 
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-48-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-47-1.png) 
 
 --- 
 
@@ -741,7 +769,7 @@ p + theme_excel()
 p + theme_economist()
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-49-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-48-1.png) 
 
 
 # Saving/exporting
