@@ -531,7 +531,7 @@ Note: use`scale_fill_distiller()` rather than `scale_fill_brewer()` for continuo
 ```r
 m + stat_density2d(aes(fill = ..level..), geom="polygon") + 
   geom_point(size=.75)+
-  scale_fill_distiller(palette="OrRd",#breaks=c(0.005,0.008,0.01),
+  scale_fill_distiller(palette="OrRd",
                        name="Kernel\nDensity")+
       xlim(0.5, 6) + ylim(40, 110)+
   xlab("Eruption Duration (minutes)")+
@@ -631,25 +631,35 @@ ggplot(diamonds, aes(clarity, fill=cut)) + geom_bar(position="dodge")
 
 ![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-40-1.png) 
 
-# Example Graphics from the NY Times
+
+# Facets
+
+
+`facet_wrap()`: one variable
+
+
+```r
+ggplot(mpg, aes(x = cty, y = hwy, color = factor(cyl))) +
+  geom_jitter()+
+  facet_wrap(~year)
+```
+
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-41-1.png) 
 
 ---
 
-### Baseball performance
-<img src="assets/baseball.png" alt="alt text" width="75%">
-<small>[NY Times](http://www.nytimes.com/interactive/2012/05/05/sports/baseball/mariano-rivera-and-his-peers.html?ref=baseball&_r=0)</small>
+`facet_grid()`: two variables
 
----
 
-### Wealthiest 1%
-<img src="assets/wealthy.jpg" alt="alt text" width="80%">
-<small>[NY Times](http://www.nytimes.com/interactive/2012/01/15/business/one-percent-map.html?ref=business)</small>
+```r
+ggplot(mpg, aes(x = cty, y = hwy, color = factor(cyl))) +
+  geom_jitter()+
+  facet_grid(year~cyl)
+```
 
----
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-42-1.png) 
 
-### Donors visit the White House
-<img src="assets/donors.png" alt="alt text" width="50%">
-<small>[NY Times](http://www.nytimes.com/interactive/2012/04/15/us/politics/Access-in-Washington-Rises-With-Donation-Size.html?ref=politics)</small>
+Very useful for timeseries of spatial data.
 
 
 # Themes
@@ -691,7 +701,7 @@ p=ggplot(mpg, aes(x = cty, y = hwy, color = factor(cyl))) +
 p
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-43-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-45-1.png) 
 
 --- 
 
@@ -701,7 +711,7 @@ p
 p + theme_solarized()
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-44-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-46-1.png) 
 
 --- 
 
@@ -711,7 +721,7 @@ p + theme_solarized()
 p +  theme_solarized(light=FALSE)
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-45-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-47-1.png) 
 
 --- 
 
@@ -721,7 +731,7 @@ p +  theme_solarized(light=FALSE)
 p + theme_excel() 
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-46-1.png) 
+![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-48-1.png) 
 
 --- 
 
@@ -731,37 +741,7 @@ p + theme_excel()
 p + theme_economist()
 ```
 
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-47-1.png) 
-
-# Faceting
-
-## _Faceting_ 
-
-`facet_wrap()`: one variable
-
-
-```r
-ggplot(mpg, aes(x = cty, y = hwy, color = factor(cyl))) +
-  geom_jitter()+
-  facet_wrap(~year)
-```
-
-![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-48-1.png) 
-
----
-
-`facet_grid()`: two variables
-
-
-```r
-ggplot(mpg, aes(x = cty, y = hwy, color = factor(cyl))) +
-  geom_jitter()+
-  facet_grid(year~cyl)
-```
-
 ![](05_ggplotIntro_files/figure-revealjs/unnamed-chunk-49-1.png) 
-
-Very useful for timeseries of spatial data.
 
 
 # Saving/exporting

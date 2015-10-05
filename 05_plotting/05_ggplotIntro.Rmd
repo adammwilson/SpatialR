@@ -539,9 +539,30 @@ ggplot(diamonds, aes(clarity, fill=cut)) + geom_bar(position="dodge")
 
 ```
 
-# Example Graphics from the NY Times
+
+# Facets
+
+
+`facet_wrap()`: one variable
+
+```{r}
+ggplot(mpg, aes(x = cty, y = hwy, color = factor(cyl))) +
+  geom_jitter()+
+  facet_wrap(~year)
+```
 
 ---
+
+`facet_grid()`: two variables
+
+```{r}
+ggplot(mpg, aes(x = cty, y = hwy, color = factor(cyl))) +
+  geom_jitter()+
+  facet_grid(year~cyl)
+```
+
+Very useful for timeseries of spatial data.
+
 
 # Themes
 
@@ -606,30 +627,6 @@ p + theme_excel()
 ```{r}
 p + theme_economist()
 ```
-
-# Faceting
-
-## _Faceting_ 
-
-`facet_wrap()`: one variable
-
-```{r}
-ggplot(mpg, aes(x = cty, y = hwy, color = factor(cyl))) +
-  geom_jitter()+
-  facet_wrap(~year)
-```
-
----
-
-`facet_grid()`: two variables
-
-```{r}
-ggplot(mpg, aes(x = cty, y = hwy, color = factor(cyl))) +
-  geom_jitter()+
-  facet_grid(year~cyl)
-```
-
-Very useful for timeseries of spatial data.
 
 
 # Saving/exporting
