@@ -1,0 +1,52 @@
+---
+title: "Introduction to Raster Package"
+author: "Adam M. Wilson"
+date: "October 2015"
+output:
+  revealjs::revealjs_presentation:
+      theme: sky
+      transition: fade
+      highlight: monochrome
+      center: false
+      width: 1080
+#      widgets: [mathjax, bootstrap,rCharts]
+      keep_md:  true
+      pandoc_args: [ "--slide-level", "2" ]
+  html_document:
+    keep_md: yes
+    toc: yes
+
+---
+
+
+```{r, echo=FALSE, message=FALSE, results='hide', purl=FALSE}
+## This chunk automatically generates a text .R version of this script when running within knitr.  You do not need to run this...
+input  = knitr::current_input()  # filename of input document
+output = paste(tools::file_path_sans_ext(input), 'R', sep = '.')
+knitr::purl(input,output,documentation=2,quiet=T)
+knitr::opts_chunk$set(cache=T,fig.width=7,fig.height=3,dpi=250)
+```
+
+## Today
+
+* More vector analysis and plotting
+* Introduction to Raster data processing
+
+> Shifting to longer in-class excercises
+
+
+## Libraries
+
+```{r message=F,warning=FALSE}
+library(dplyr)
+library(tidyr)
+library(sp)
+library(ggplot2)
+
+# Three new libraries
+library(rgeos)
+library(raster)
+library(rasterVis)  #visualization library for raster
+```
+
+
