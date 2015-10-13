@@ -518,6 +518,8 @@ focal(r1, w=matrix(1,3,3), fun=mean) %>%
   plot()
 
 #' 
+#' ---
+#' 
 ## ------------------------------------------------------------------------
 ## apply a function over a moving window
 rf_min <- focal(r1, w=matrix(1,11,11), fun=min)
@@ -678,6 +680,74 @@ spplot(rsp,zcol="bio1")
 #' 2. Calculate the overall range for each variable with `cellStats()`
 #' 3. Calculate the focal median with an 11x11 window with `focal()`
 #' 4. Create a transect across the region and extract the temperature data.
+#' 
+#' 
+#' ## Example
+#' 
+#' 1. Download the Maximum Temperature dataset using `getData()`
+#' 2. Crop it to the country you downloaded (or ZA?)
+#' 2. Calculate the overall range for each variable with `cellStats()`
+#' 
+## ------------------------------------------------------------------------
+
+tun=getData('GADM', country='TUN', level=1)
+tmax=getData('worldclim', var='tmax', res=10)
+gain(tmax)=0.1
+tmax_tun=crop(tmax,tun)
+
+cellStats(tmax_tun,"range")
+
+#' 
+#' ---
+#' 
+#' 3. Calculate the focal median with an 11x11 window with `focal()`
+#' 4. Create a transect across the region and extract the temperature data.
+#' 
+## ------------------------------------------------------------------------
+tmax_tunf=list()
+for(i in 1:nlayers(tmax_tun))
+  tmax_tunf[[i]]=focal(tmax_tun[[i]],w=matrix(1,11,11),fun=median)
+tmax_tunf=stack(tmax_tunf)
+
+# Transect
+transect = SpatialLinesDataFrame(
+  SpatialLines(list(Lines(list(Line(
+    cbind(c(8, 10),c(36, 36)))), ID = "TUN"))),
+  data.frame(Z = c("transect"), row.names = c("TUN")))
+
+
+#' 
+#' ---
+#' 
+## ------------------------------------------------------------------------
+gplot(tmax_tun)+geom_tile(aes(fill=value))+
+  facet_wrap(~variable)+
+  geom_path(data=fortify(tun),
+            mapping=aes(x=long,y=lat,
+                        group=group,order=order))+
+  geom_line(aes(x=long,y=lat),
+            data=fortify(transect),col="red")+
+  coord_equal()
+
+#' 
+#' ---
+#' 
+## ------------------------------------------------------------------------
+trans=raster::extract(tmax_tun,transect,along=T,cellnumbers=T)%>% 
+  as.data.frame()
+trans[,c("lon","lat")]=coordinates(clim)[trans$cell]
+trans$order=as.integer(rownames(trans))
+  
+transl=group_by(trans,lon,lat)%>%
+  gather(variable, value, -lon, -lat, -cell, -order)
+
+ggplot(transl,aes(x=lon,y=value,
+                  colour=variable,group=variable,
+                  order=order))+
+  geom_line()
+
+
+#' 
 #' 
 #' ## Raster Processing
 #' 

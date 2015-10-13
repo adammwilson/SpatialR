@@ -815,6 +815,8 @@ focal(r1, w=matrix(1,3,3), fun=mean) %>%
 
 ![](07_Raster_files/figure-revealjs/unnamed-chunk-42-1.png) 
 
+---
+
 
 ```r
 ## apply a function over a moving window
@@ -1037,6 +1039,92 @@ spplot(rsp,zcol="bio1")
 2. Calculate the overall range for each variable with `cellStats()`
 3. Calculate the focal median with an 11x11 window with `focal()`
 4. Create a transect across the region and extract the temperature data.
+
+
+## Example
+
+1. Download the Maximum Temperature dataset using `getData()`
+2. Crop it to the country you downloaded (or ZA?)
+2. Calculate the overall range for each variable with `cellStats()`
+
+
+```r
+tun=getData('GADM', country='TUN', level=1)
+tmax=getData('worldclim', var='tmax', res=10)
+gain(tmax)=0.1
+tmax_tun=crop(tmax,tun)
+
+cellStats(tmax_tun,"range")
+```
+
+```
+##      tmax1 tmax2 tmax3 tmax4 tmax5 tmax6 tmax7 tmax8 tmax9 tmax10 tmax11
+## [1,]   8.4  10.1  13.8  17.4  21.9  26.4  29.6  30.3  26.6   19.7   14.1
+## [2,]  18.1  21.2  25.6  31.2  35.9  41.4  43.3  42.6  38.5   31.9   24.5
+##      tmax12
+## [1,]    9.6
+## [2,]   18.9
+```
+
+---
+
+3. Calculate the focal median with an 11x11 window with `focal()`
+4. Create a transect across the region and extract the temperature data.
+
+
+```r
+tmax_tunf=list()
+for(i in 1:nlayers(tmax_tun))
+  tmax_tunf[[i]]=focal(tmax_tun[[i]],w=matrix(1,11,11),fun=median)
+tmax_tunf=stack(tmax_tunf)
+
+# Transect
+transect = SpatialLinesDataFrame(
+  SpatialLines(list(Lines(list(Line(
+    cbind(c(8, 10),c(36, 36)))), ID = "TUN"))),
+  data.frame(Z = c("transect"), row.names = c("TUN")))
+```
+
+---
+
+
+```r
+gplot(tmax_tun)+geom_tile(aes(fill=value))+
+  facet_wrap(~variable)+
+  geom_path(data=fortify(tun),
+            mapping=aes(x=long,y=lat,
+                        group=group,order=order))+
+  geom_line(aes(x=long,y=lat),
+            data=fortify(transect),col="red")+
+  coord_equal()
+```
+
+```
+## Regions defined for each Polygons
+```
+
+![](07_Raster_files/figure-revealjs/unnamed-chunk-56-1.png) 
+
+---
+
+
+```r
+trans=raster::extract(tmax_tun,transect,along=T,cellnumbers=T)%>% 
+  as.data.frame()
+trans[,c("lon","lat")]=coordinates(clim)[trans$cell]
+trans$order=as.integer(rownames(trans))
+  
+transl=group_by(trans,lon,lat)%>%
+  gather(variable, value, -lon, -lat, -cell, -order)
+
+ggplot(transl,aes(x=lon,y=value,
+                  colour=variable,group=variable,
+                  order=order))+
+  geom_line()
+```
+
+![](07_Raster_files/figure-revealjs/unnamed-chunk-57-1.png) 
+
 
 ## Raster Processing
 
