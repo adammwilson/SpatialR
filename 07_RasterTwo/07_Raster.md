@@ -9,7 +9,8 @@ October 2015
 
 * Homework: post tomorrow
 * More raster...
-  * Socioeconomic data at SEDAC
+     * Socioeconomic data at SEDAC
+     * `Your Turn` sections
 * Final Project discussion / work?
 
 ## Libraries
@@ -236,7 +237,7 @@ gplot(dem,max=1e5)+geom_tile(aes(fill=value))+
   scale_fill_gradientn(
     colours=c("red","yellow","grey30","grey20","grey10"),
     trans="log1p",breaks= log_breaks(n = 5, base = 10)(c(1, 1e3)))+
-  coord_equal(ylim=c(-21,25))+
+  coord_equal(ylim=c(21,25))+
   geom_path(data=fortify(bgd),
             aes(x=long,y=lat,order=order,group=group),size=.5)
 ```
@@ -249,7 +250,9 @@ gplot(dem,max=1e5)+geom_tile(aes(fill=value))+
 
 ---
 
-## Terrain analysis (an aside)
+# Terrain analysis (an aside)
+
+## Terrain analysis options
 
 `terrain()` options:
 
