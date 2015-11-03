@@ -1,5 +1,5 @@
 #' ---
-#' title: "Climate Metrics from gridded daily weather data"
+#' title: "Climate Metrics from daily weather data"
 #' output:
 #'   html_document:
 #'     keep_md: yes
@@ -96,7 +96,7 @@ library(ggplot2)
 library(ggmap)
 library(dplyr)
 library(tidyr)
-
+library(maps)
 # New Packages
 library(rnoaa)
 library(climdex.pcic)
@@ -176,6 +176,12 @@ ggplot(st,aes(y=latitude,x=longitude)) +
 #' 
 #' * include only stations with data between 1950 and 2000
 #' * include only `tmax`
+#' 
+#' \ 
+#' \ 
+#' \ 
+#' \ 
+#' \ 
 #' 
 #' 
 #' ## Download daily data from GHCN
@@ -339,7 +345,7 @@ ggplot(filter(d4,date>as.Date("2014-01-01")),
 #' 
 #' # Time Series analysis
 #' 
-#' Most timeseries funcitons use the time series class (`ts`)
+#' Most timeseries functions use the time series class (`ts`)
 #' 
 ## ------------------------------------------------------------------------
 tmin.ts=ts(d3b$tmin,deltat=1/365)
@@ -498,7 +504,7 @@ plot(cdd~as.numeric(names(cdd)),type="l")
 #' ### Diurnal Temperature Range
 #' 
 ## ------------------------------------------------------------------------
-dtr=climdex.dtr(ci, freq = c("monthly", "annual"))
+dtr=climdex.dtr(ci, freq = c("annual"))
 plot(dtr,type="l")
 
 #' 
@@ -516,6 +522,24 @@ plot(fd,type="l")
 climdex.get.available.indices(ci)
 
 #' 
-#' Select 3 indices and use either the `kendallSeasonalTrendTest()` to assess trends over the available data period.  
+#' Select 3 indices and use the `kendallSeasonalTrendTest()` to assess trends over the available data period.  
 #' 
 #' 
+#' 
+## ---- eval=present, echo=present-----------------------------------------
+dtr=climdex.dtr(ci,freq = "annual")
+plot(dtr,type="l")
+
+dtr=climdex.dtr(ci,freq = "monthly")
+plot(dtr,type="l")
+
+
+dtrf=as.data.frame(dtr)
+dtrf$date=as.Date(paste0(
+  rownames(dtrf),"-15"),"%Y-%m-%d")
+dtrf$month=as.numeric(format(dtrf$date,"%m"))
+dtrf$year=as.numeric(format(dtrf$date,"%Y"))
+
+kendallSeasonalTrendTest(
+  dtr~month+year,data=dtrf)
+

@@ -1,4 +1,4 @@
-# Climate Metrics from gridded daily weather data
+# Climate Metrics from daily weather data
 
 
 
@@ -87,7 +87,7 @@ library(ggplot2)
 library(ggmap)
 library(dplyr)
 library(tidyr)
-
+library(maps)
 # New Packages
 library(rnoaa)
 library(climdex.pcic)
@@ -177,6 +177,12 @@ Produce a binned map (like above) with the following modifications:
 * include only stations with data between 1950 and 2000
 * include only `tmax`
 
+\ 
+\ 
+\ 
+\ 
+\ 
+
 
 ```r
 ggplot(filter(st,
@@ -185,9 +191,15 @@ ggplot(filter(st,
               element=="TMAX"),
        aes(y=latitude,x=longitude)) +
   stat_bin2d(bins=75)+
-  scale_fill_gradient(low="yellow",high="red",trans="log",
-                       breaks = c(1,10,50))+
-  geom_path(aes(x=long,y=lat,group=group,order=order),data=fortify(worldmap),size=.5)+
+  scale_fill_gradient(
+    low="yellow",high="red",
+    trans="log",
+    breaks = c(1,10,50))+
+  geom_path(aes(x=long,
+        y=lat,group=group,
+        order=order),
+        data=fortify(worldmap),
+        size=.5)+
   coord_equal()
 ```
 
@@ -466,8 +478,9 @@ tp=d3b %>%
   arrange(date)  %>% 
   mutate(prcp.30 = rollsum(x = prcp, 30, align = "right", fill = NA))
 
-ggplot(tp,aes(y=prcp.30,x=date))+
-  geom_line(col="black") 
+ggplot(tp,aes(y=prcp,x=date))+
+  geom_line(aes(y=prcp.30),col="black")+ 
+  geom_line(col="red") 
 ```
 
 ```
@@ -480,7 +493,7 @@ ggplot(tp,aes(y=prcp.30,x=date))+
 
 # Time Series analysis
 
-Most timeseries funcitons use the time series class (`ts`)
+Most timeseries functions use the time series class (`ts`)
 
 
 ```r
@@ -845,7 +858,7 @@ plot(cdd~as.numeric(names(cdd)),type="l")
 
 
 ```r
-dtr=climdex.dtr(ci, freq = c("monthly", "annual"))
+dtr=climdex.dtr(ci, freq = c("annual"))
 plot(dtr,type="l")
 ```
 
@@ -886,6 +899,103 @@ climdex.get.available.indices(ci)
 ## [27] "climdex.dtr"
 ```
 
-Select 3 indices and use either the `kendallSeasonalTrendTest()` to assess trends over the available data period.  
+Select 3 indices and use the `kendallSeasonalTrendTest()` to assess trends over the available data period.  
 
 
+
+
+```r
+dtr=climdex.dtr(ci,freq = "annual")
+plot(dtr,type="l")
+```
+
+![](09_ExtremeClimate_files/figure-html/unnamed-chunk-39-1.png) 
+
+```r
+dtr=climdex.dtr(ci,freq = "monthly")
+plot(dtr,type="l")
+```
+
+![](09_ExtremeClimate_files/figure-html/unnamed-chunk-39-2.png) 
+
+```r
+dtrf=as.data.frame(dtr)
+dtrf$date=as.Date(paste0(
+  rownames(dtrf),"-15"),"%Y-%m-%d")
+dtrf$month=as.numeric(format(dtrf$date,"%m"))
+dtrf$year=as.numeric(format(dtrf$date,"%Y"))
+
+kendallSeasonalTrendTest(
+  dtr~month+year,data=dtrf)
+```
+
+```
+## 
+## Results of Hypothesis Test
+## --------------------------
+## 
+## Null Hypothesis:                 All 12 values of tau = 0
+## 
+## Alternative Hypothesis:          The seasonal taus are not all equal
+##                                  (Chi-Square Heterogeneity Test)
+##                                  At least one seasonal tau != 0
+##                                  and all non-zero tau's have the
+##                                  same sign (z Trend Test)
+## 
+## Test Name:                       Seasonal Kendall Test for Trend
+##                                  (with continuity correction)
+## 
+## Estimated Parameter(s):          tau       = -0.1844224
+##                                  slope     = -0.0130303
+##                                  intercept = 24.3858349
+## 
+## Estimation Method:               tau:        Weighted Average of
+##                                              Seasonal Estimates
+##                                  slope:      Hirsch et al.'s
+##                                              Modification of
+##                                              Thiel/Sen Estimator
+##                                  intercept:  Median of
+##                                              Seasonal Estimates
+## 
+## Data:                            y      = dtr  
+##                                  season = month
+##                                  year   = year 
+## 
+## Data Source:                     dtrf
+## 
+## Sample Sizes:                    1     =  77
+##                                  2     =  77
+##                                  3     =  77
+##                                  4     =  77
+##                                  5     =  78
+##                                  6     =  78
+##                                  7     =  78
+##                                  8     =  78
+##                                  9     =  78
+##                                  10    =  77
+##                                  11    =  77
+##                                  12    =  77
+##                                  Total = 929
+## 
+## Number NA/NaN/Inf's:             7
+## 
+## Test Statistics:                 Chi-Square (Het) = 71.471604
+##                                  z (Trend)        = -8.284672
+## 
+## Test Statistic Parameter:        df = 11
+## 
+## P-values:                        Chi-Square (Het) = 6.409606e-11
+##                                  z (Trend)        = 1.184350e-16
+## 
+## Confidence Interval for:         slope
+## 
+## Confidence Interval Method:      Gilbert's Modification of
+##                                  Theil/Sen Method
+## 
+## Confidence Interval Type:        two-sided
+## 
+## Confidence Level:                95%
+## 
+## Confidence Interval:             LCL = -0.01606296
+##                                  UCL = -0.01010091
+```
