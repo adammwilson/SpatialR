@@ -421,7 +421,7 @@ tseas=as.numeric(sub("Q","",quarters(getZ(lst2))))
 tseas[1:20]
 
 lst_seas=stackApply(lst2,indices = tseas,mean,na.rm=T)
-names(lst_seas)=c("1_Winter","2_Spring","3_Summer","4_Fall")
+names(lst_seas)=c("Q1_Winter","Q2_Spring","Q3_Summer","Q4_Fall")
 
 gplot(lst_seas)+geom_raster(aes(fill=value))+
   facet_wrap(~variable)+
@@ -499,17 +499,20 @@ lc=raster(lc_files[1])
 #' 
 #' Convert to `factor` raster
 ## ----warnings=F----------------------------------------------------------
-lc=ratify(lc)
-levels(lc)=data.frame(ID=Land_Cover_Type_1,landcover=names(Land_Cover_Type_1))
+lc=as.factor(lc)
+lcd=data.frame(ID=Land_Cover_Type_1,landcover=names(Land_Cover_Type_1))
+levels(lc)=lcd
 
-#' Warnings OK because some factors not present in this subset...
+#' Warnings about `.checkLevels()` OK here because some factors not present in this subset...
 #' 
 #' ### Resample `lc` to `lst` grid
 #' 
 ## ------------------------------------------------------------------------
 lc2=resample(lc,lst,method="ngb")
+par(mfrow=c(1,2)) 
 plot(lc)
 plot(lc2)
+par(mfrow=c(1,1))
 
 #' 
 #' ### Summarize mean monthly temperatures by Landcover
@@ -517,6 +520,33 @@ plot(lc2)
 ## ------------------------------------------------------------------------
 table(values(lc))
 
+#' 
+#' Extract values from `lst` and `lc` rasters.  
+#' 
+## ------------------------------------------------------------------------
+lcds1=cbind.data.frame(values(lst_seas),ID=values(lc2))
+head(lcds1)
+
+#' 
+#' Melt table and add LandCover Name
+## ------------------------------------------------------------------------
+lcds2=lcds1%>%
+  melt(id.vars="ID",variable.name = "season",value.var="value")%>%
+  mutate(ID=as.numeric(ID))%>%
+  left_join(lcd)
+head(lcds2)
+
+#' 
+#' #### Explore LST distributions by landcover
+#' 
+## ------------------------------------------------------------------------
+ggplot(lcds2,aes(y=value,x=landcover,group=landcover))+
+  facet_wrap(~season)+
+  coord_flip()+
+  geom_point(alpha=.5,position="jitter")+
+  geom_violin(alpha=.5,col="red",scale = "width")
+
+#' 
 #' 
 #' ### Use Zonal Statistics to calculate summaries
 ## ------------------------------------------------------------------------
@@ -535,22 +565,15 @@ lctl=melt(lct.summary,id.var=c("zone","var"),value="lst")
 lctl$season=factor(lctl$variable,labels=c("Winter","Spring","Summer","Fall"),ordered=T)
 lctl$lc=levels(lc)[[1]][lctl$zone+1,"landcover"]
 lctl=dcast(lctl,zone+season+lc~var,value="value")
-head(lctl)
+head(lctl)%>%kable()
 
 #' 
-#' #### Plot it
+#' ## Build summary table
 ## ------------------------------------------------------------------------
-ggplot(lctl,aes(x=season,y=mean,group=lc,colour=lc))+
-  geom_line()+
-  geom_errorbar(aes(ymax=mean+sd,ymin=mean-sd))
-
-#' 
-#' ## Keep only common LC types (>10 pixels)
-## ------------------------------------------------------------------------
-ggplot(filter(lctl,count>=10),
-       aes(x=season,y=mean,group=lc,colour=lc,
-           ymax=mean+sd,ymin=mean-sd))+
-  geom_pointrange(position="jitter")
+filter(lctl,count>=100)%>%
+  mutate(txt=paste0(round(mean,2)," (±",round(sd,2),")"))%>%
+  dcast(lc+count~season,value.var="txt")%>%
+  kable()
 
 #' 
 #' ## Your turn
@@ -560,9 +583,16 @@ ggplot(filter(lctl,count>=10),
 #' <br><br><br><br><br><br><br><br><br><br><br><br><br>
 #' 
 ## ---- purl=present, eval=present-----------------------------------------
-zonal(max(lst_seas),lc2,'max',na.rm=T)%>%data.frame()%>%
+zonal(max(lst_seas),lc2,'max',na.rm=T)%>%
+  data.frame()%>%
   left_join(levels(lc)[[1]],by=c("zone"="ID"))%>%
-  arrange(max)
+  arrange(desc(max))%>%
+  kable()
 
 #' 
+#' 
+#' Things to think about:
+#' 
+#' * What tests would you use to identify differences?
+#' * Do you need to worry about unequal sample sizes?
 #' 

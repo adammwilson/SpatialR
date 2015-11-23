@@ -1,0 +1,16 @@
+
+#PBS -S /bin/bash
+#PBS -l select=120:ncpus=8:mpiprocs=8
+#PBS -l walltime=24:00:00
+#PBS -q devel
+
+CORES=960
+
+IDIR=/path/to/working/dir
+WORKLIST=$IDIR/process.txt
+EXE=Rscript
+LOGSTDOUT=$IDIR/log/stdout
+LOGSTDERR=$IDIR/log/stderr
+          
+### use mpiexec to parallelize across lines in process.txt
+mpiexec -np $CORES pxargs -a $WORKLIST -p $EXE 1> $LOGSTDOUT 2> $LOGSTDERR

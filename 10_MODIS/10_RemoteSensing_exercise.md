@@ -679,7 +679,7 @@ tseas[1:20]
 
 ```r
 lst_seas=stackApply(lst2,indices = tseas,mean,na.rm=T)
-names(lst_seas)=c("1_Winter","2_Spring","3_Summer","4_Fall")
+names(lst_seas)=c("Q1_Winter","Q2_Spring","Q3_Summer","Q4_Fall")
 
 gplot(lst_seas)+geom_raster(aes(fill=value))+
   facet_wrap(~variable)+
@@ -766,8 +766,9 @@ Get cover clases from [MODIS website](https://lpdaac.usgs.gov/dataset_discovery/
 Convert to `factor` raster
 
 ```r
-lc=ratify(lc)
-levels(lc)=data.frame(ID=Land_Cover_Type_1,landcover=names(Land_Cover_Type_1))
+lc=as.factor(lc)
+lcd=data.frame(ID=Land_Cover_Type_1,landcover=names(Land_Cover_Type_1))
+levels(lc)=lcd
 ```
 
 ```
@@ -787,23 +788,23 @@ levels(lc)=data.frame(ID=Land_Cover_Type_1,landcover=names(Land_Cover_Type_1))
 ## the values in the "ID" column in the raster
 ## attributes (factors) data.frame have changed
 ```
-Warnings OK because some factors not present in this subset...
+Warnings about `.checkLevels()` OK here because some factors not present in this subset...
 
 ### Resample `lc` to `lst` grid
 
 
 ```r
 lc2=resample(lc,lst,method="ngb")
+par(mfrow=c(1,2)) 
 plot(lc)
+plot(lc2)
 ```
 
 ![](10_RemoteSensing_exercise_files/figure-html/unnamed-chunk-42-1.png) 
 
 ```r
-plot(lc2)
+par(mfrow=c(1,1))
 ```
-
-![](10_RemoteSensing_exercise_files/figure-html/unnamed-chunk-42-2.png) 
 
 ### Summarize mean monthly temperatures by Landcover
 
@@ -819,6 +820,65 @@ table(values(lc))
 ##  14 
 ## 655
 ```
+
+Extract values from `lst` and `lc` rasters.  
+
+
+```r
+lcds1=cbind.data.frame(values(lst_seas),ID=values(lc2))
+head(lcds1)
+```
+
+```
+##   Q1_Winter Q2_Spring Q3_Summer  Q4_Fall ID
+## 1  1.862969  26.51290  28.61344 8.280000 13
+## 2  2.285000  26.81950  28.91517 8.512222 13
+## 3  3.223058  26.97719  29.24360 8.779913 13
+## 4  3.279153  26.89791  29.13267 8.881607 13
+## 5  3.187759  26.97777  29.10033 8.986842 13
+## 6  2.644872  26.87336  28.72423 8.636271 13
+```
+
+Melt table and add LandCover Name
+
+```r
+lcds2=lcds1%>%
+  melt(id.vars="ID",variable.name = "season",value.var="value")%>%
+  mutate(ID=as.numeric(ID))%>%
+  left_join(lcd)
+```
+
+```
+## Joining by: "ID"
+```
+
+```r
+head(lcds2)
+```
+
+```
+##   ID    season    value        landcover
+## 1 13 Q1_Winter 1.862969 Urban & built-up
+## 2 13 Q1_Winter 2.285000 Urban & built-up
+## 3 13 Q1_Winter 3.223058 Urban & built-up
+## 4 13 Q1_Winter 3.279153 Urban & built-up
+## 5 13 Q1_Winter 3.187759 Urban & built-up
+## 6 13 Q1_Winter 2.644872 Urban & built-up
+```
+
+#### Explore LST distributions by landcover
+
+
+```r
+ggplot(lcds2,aes(y=value,x=landcover,group=landcover))+
+  facet_wrap(~season)+
+  coord_flip()+
+  geom_point(alpha=.5,position="jitter")+
+  geom_violin(alpha=.5,col="red",scale = "width")
+```
+
+![](10_RemoteSensing_exercise_files/figure-html/unnamed-chunk-46-1.png) 
+
 
 ### Use Zonal Statistics to calculate summaries
 
@@ -839,46 +899,35 @@ lctl=melt(lct.summary,id.var=c("zone","var"),value="lst")
 lctl$season=factor(lctl$variable,labels=c("Winter","Spring","Summer","Fall"),ordered=T)
 lctl$lc=levels(lc)[[1]][lctl$zone+1,"landcover"]
 lctl=dcast(lctl,zone+season+lc~var,value="value")
-head(lctl)
+head(lctl)%>%kable()
 ```
 
-```
-##   zone season                          lc
-## 1    0 Winter                       Water
-## 2    0 Spring                       Water
-## 3    0 Summer                       Water
-## 4    0   Fall                       Water
-## 5    1 Winter Evergreen Needleleaf forest
-## 6    1 Spring Evergreen Needleleaf forest
-##         mean        sd count
-## 1  0.5153696 0.3662726     5
-## 2 17.5434186 1.2999543     5
-## 3 22.9897867 0.6123666     5
-## 4  7.7698341 0.5391288     5
-## 5  0.7437689 0.5203108     6
-## 6 19.4351263 2.3721006     6
-```
 
-#### Plot it
+
+ zone  season   lc                                   mean          sd   count
+-----  -------  ----------------------------  -----------  ----------  ------
+    0  Winter   Water                           0.5153696   0.3662726       5
+    0  Spring   Water                          17.5434186   1.2999543       5
+    0  Summer   Water                          22.9897867   0.6123666       5
+    0  Fall     Water                           7.7698341   0.5391288       5
+    1  Winter   Evergreen Needleleaf forest     0.7437689   0.5203108       6
+    1  Spring   Evergreen Needleleaf forest    19.4351263   2.3721006       6
+
+## Build summary table
 
 ```r
-ggplot(lctl,aes(x=season,y=mean,group=lc,colour=lc))+
-  geom_line()+
-  geom_errorbar(aes(ymax=mean+sd,ymin=mean-sd))
+filter(lctl,count>=100)%>%
+  mutate(txt=paste0(round(mean,2)," (±",round(sd,2),")"))%>%
+  dcast(lc+count~season,value.var="txt")%>%
+  kable()
 ```
 
-![](10_RemoteSensing_exercise_files/figure-html/unnamed-chunk-46-1.png) 
 
-## Keep only common LC types (>10 pixels)
 
-```r
-ggplot(filter(lctl,count>=10),
-       aes(x=season,y=mean,group=lc,colour=lc,
-           ymax=mean+sd,ymin=mean-sd))+
-  geom_pointrange(position="jitter")
-```
-
-![](10_RemoteSensing_exercise_files/figure-html/unnamed-chunk-47-1.png) 
+lc                                    count  Winter         Spring         Summer          Fall         
+-----------------------------------  ------  -------------  -------------  --------------  -------------
+Cropland/Natural vegetation mosaic      185  1.55 (±0.88)   24.39 (±2)     26.48 (±1.82)   8.1 (±0.62)  
+Urban & built-up                        200  2.71 (±0.83)   26.69 (±2.1)   28.74 (±1.82)   8.77 (±0.62) 
 
 ## Your turn
 
@@ -888,34 +937,31 @@ Calculate the  maximum observed seasonal average lst in each land cover type.
 
 
 ```r
-zonal(max(lst_seas),lc2,'max',na.rm=T)%>%data.frame()%>%
+zonal(max(lst_seas),lc2,'max',na.rm=T)%>%
+  data.frame()%>%
   left_join(levels(lc)[[1]],by=c("zone"="ID"))%>%
-  arrange(max)
+  arrange(desc(max))%>%
+  kable()
 ```
 
-```
-##    zone      max
-## 1     0 23.94775
-## 2     1 24.88800
-## 3     3 25.15752
-## 4     5 25.68387
-## 5     4 26.23543
-## 6     8 26.87503
-## 7     9 29.84034
-## 8    12 31.04633
-## 9    14 31.36159
-## 10   13 31.63883
-##                             landcover
-## 1                               Water
-## 2         Evergreen Needleleaf forest
-## 3         Deciduous Needleleaf forest
-## 4                        Mixed forest
-## 5          Deciduous Broadleaf forest
-## 6                      Woody savannas
-## 7                            Savannas
-## 8                           Croplands
-## 9  Cropland/Natural vegetation mosaic
-## 10                   Urban & built-up
-```
 
+
+ zone        max  landcover                          
+-----  ---------  -----------------------------------
+   13   31.63883  Urban & built-up                   
+   14   31.36159  Cropland/Natural vegetation mosaic 
+   12   31.04633  Croplands                          
+    9   29.84034  Savannas                           
+    8   26.87503  Woody savannas                     
+    4   26.23543  Deciduous Broadleaf forest         
+    5   25.68387  Mixed forest                       
+    3   25.15752  Deciduous Needleleaf forest        
+    1   24.88800  Evergreen Needleleaf forest        
+    0   23.94775  Water                              
+
+
+Things to think about:
+
+* What tests would you use to identify differences?
+* Do you need to worry about unequal sample sizes?
 
