@@ -166,12 +166,12 @@ ggplot(finch@data, aes(map_id = id)) +
 #' 
 #' <br><br><br><br><br><br><br><br><br><br><br><br>
 #' 
-## ------------------------------------------------------------------------
+## ---- purl=present,eval=present,echo=present,fig.height=7----------------
 ggplot(finch@data, aes(map_id = id)) +
     expand_limits(x = pfinch$long, y = pfinch$lat)+
     scale_fill_gradientn(colours = c("blue","grey","red"))+
     coord_equal()+
-    geom_map(aes(fill = wintert), map = pfinch)
+    geom_map(aes(fill = meanelev), map = pfinch)
 
 #' 
 #' Use `grid.arrange()` to plot multiple plots in the same figure.
@@ -324,9 +324,9 @@ predictions <- data.frame(id=finch$id,
                           ndvi=  preds.ndvi.only, 
                           ndvi_resid=  resid.ndvi.only,
                           space =  preds.space.only,
-                          space_resid =  preds.space.and.ndvi,
+                          space_resid =  resid.space.only,
                           ndvispace=  preds.space.and.ndvi,
-                          ndvispace_resid=  resid.space.only)
+                          ndvispace_resid= resid.space.and.ndvi)
 
 #' 
 #' Combine all the predictions into a single _long_ table:
@@ -410,13 +410,17 @@ ggplot(cor,aes(x=Distance,y=Correlation,col=var,group=var))+
 #' 
 #' <br><br><br><br><br><br><br><br><br><br><br><br>
 #' 
-## ------------------------------------------------------------------------
-
-m1 <- gam(present~ndvi+meanelev+wintert+meanppt + s(X_CEN, Y_CEN),
-                   data=finch@data, family="binomial")
-
 #' 
 #' Print a summary table
-## ---- results='asis'-----------------------------------------------------
-kable(AIC(ndvi.only, space.only, space.and.ndvi,m1))
+## ---- results='asis', purl=present,eval=present,echo=present,fig.height=7----
+xtable(summary(m1)$p.table)%>%
+    print(type="html")
+
+#' 
+#' Compare all models
+## ----results='asis',purl=present,eval=present,echo=present---------------
+kable(AIC(ndvi.only, 
+          space.only, 
+          space.and.ndvi,
+          m1))
 

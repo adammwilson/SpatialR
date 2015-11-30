@@ -211,7 +211,7 @@ ggplot(finch@data, aes(map_id = id)) +
     expand_limits(x = pfinch$long, y = pfinch$lat)+
     scale_fill_gradientn(colours = c("blue","grey","red"))+
     coord_equal()+
-    geom_map(aes(fill = wintert), map = pfinch)
+    geom_map(aes(fill = meanelev), map = pfinch)
 ```
 
 ![](12_SDM_Exercise_files/figure-html/unnamed-chunk-11-1.png) 
@@ -422,9 +422,9 @@ predictions <- data.frame(id=finch$id,
                           ndvi=  preds.ndvi.only, 
                           ndvi_resid=  resid.ndvi.only,
                           space =  preds.space.only,
-                          space_resid =  preds.space.and.ndvi,
+                          space_resid =  resid.space.only,
                           ndvispace=  preds.space.and.ndvi,
-                          ndvispace_resid=  resid.space.only)
+                          ndvispace_resid= resid.space.and.ndvi)
 ```
 
 Combine all the predictions into a single _long_ table:
@@ -522,14 +522,38 @@ Try adding additional co-variates into the spatial model (e.g. elevation or clim
 
 
 ```r
-m1 <- gam(present~ndvi+meanelev+wintert+meanppt + s(X_CEN, Y_CEN),
-                   data=finch@data, family="binomial")
+m1 <- gam(present~ndvi+meanelev+
+            wintert+meanppt+urban + 
+            s(X_CEN, Y_CEN),
+            data=finch@data, family="binomial")
 ```
 
 Print a summary table
 
 ```r
-kable(AIC(ndvi.only, space.only, space.and.ndvi,m1))
+xtable(summary(m1)$p.table)%>%
+    print(type="html")
+```
+
+<!-- html table generated in R 3.2.0 by xtable 1.7-4 package -->
+<!-- Mon Nov 23 19:04:55 2015 -->
+<table border=1>
+<tr> <th>  </th> <th> Estimate </th> <th> Std. Error </th> <th> z value </th> <th> Pr(&gt;|z|) </th>  </tr>
+  <tr> <td align="right"> (Intercept) </td> <td align="right"> -5.82 </td> <td align="right"> 2.12 </td> <td align="right"> -2.75 </td> <td align="right"> 0.01 </td> </tr>
+  <tr> <td align="right"> ndvi </td> <td align="right"> 2.11 </td> <td align="right"> 0.79 </td> <td align="right"> 2.67 </td> <td align="right"> 0.01 </td> </tr>
+  <tr> <td align="right"> meanelev </td> <td align="right"> -4.91 </td> <td align="right"> 4.83 </td> <td align="right"> -1.02 </td> <td align="right"> 0.31 </td> </tr>
+  <tr> <td align="right"> wintert </td> <td align="right"> -2.26 </td> <td align="right"> 4.06 </td> <td align="right"> -0.56 </td> <td align="right"> 0.58 </td> </tr>
+  <tr> <td align="right"> meanppt </td> <td align="right"> 4.28 </td> <td align="right"> 3.21 </td> <td align="right"> 1.33 </td> <td align="right"> 0.18 </td> </tr>
+  <tr> <td align="right"> urban </td> <td align="right"> 0.12 </td> <td align="right"> 0.74 </td> <td align="right"> 0.17 </td> <td align="right"> 0.87 </td> </tr>
+   </table>
+
+Compare all models
+
+```r
+kable(AIC(ndvi.only, 
+          space.only, 
+          space.and.ndvi,
+          m1))
 ```
 
                         df        AIC
@@ -537,4 +561,4 @@ kable(AIC(ndvi.only, space.only, space.and.ndvi,m1))
 ndvi.only          2.00000   232.6058
 space.only        29.83238   183.7504
 space.and.ndvi    25.35174   165.7837
-m1                28.02387   168.1601
+m1                28.91842   170.0102

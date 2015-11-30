@@ -1,0 +1,181 @@
+---
+title: "Project-Related RMarkdown"
+output:
+  html_document:
+    keep_md: yes
+---
+
+## Documentation
+
+* [RMarkdown](http://rmarkdown.rstudio.com)
+* [Knitr](http://yihui.name/knitr/)
+
+## Document options
+
+See `knitr::opts_chunk$get()` for all options and their defaults.
+
+Set options for the full document with:
+```{r}
+knitr::opts_chunk$set(cache=F,
+                      fig.width=7,
+                      fig.height=4,
+                      dpi=300,
+                      dev="png")
+```
+
+
+## Code chunk settings
+Chunk headers:
+
+Show code and results with `echo=T` and `results='markup'` (the defaults):
+```{r, echo=T, results='markup'}
+2+2
+```
+
+Or hide code with:
+```{r, echo=F}
+2+2
+```
+
+Or hide results with:
+```{r, results='hide'}
+2+2
+```
+
+Or hide both with:
+```{r, results='hide',echo=F}
+2+2
+```
+
+
+### Messages
+Some functions print output that you will want to hide in the report.  Use `message=F` to do this, especially for packages...
+
+```{r}
+library(rgdal)
+```
+
+Use `message=F` to hide message output.
+
+```{r, message=F}
+library(rgdal)
+library(raster)
+```
+
+Other things to hide or show:
+
+* warnings
+* errors
+
+
+## Caching for computationally intensive steps (e.g. >1 minute)
+
+Caching stores temporary output so it does not need to be run every time the document is compiled.  See demos available [here](http://yihui.name/knitr/demo/cache/). 
+
+### knitr caching
+Set `knitr::opts_chunk$set(cache=T)` as above.  
+
+* Knitr automatically keeps track of which chunks have been edited and what needs to be re-run.  
+* Results saved in `cache` folder
+* Usually works, but awkward for really large temporary files and sometimes tricky to get paths correct
+
+### User-caching
+An alternative is to write temporary files to disk and only calculate them when they don't already exist (or you want to overwrite them)
+
+```{r}
+library(raster)
+
+datadir="/Users/adamw/GoogleDrive/Work/courses/2015_UB503/SpatialR"
+ow=FALSE  # flag whether to overwrite existing files anyway
+
+## Heavy step
+fo=file.path(datadir,"data.tif")  # define output filename
+
+if(!file.exists(fo) | ow){  # test if file exists or overwrite is desired
+
+  r=raster(matrix(rnorm(1:100),nrow=10))   # do your computation
+  # ...
+  writeRaster(r,file=fo,overwrite=ow)  # write it out to disk
+
+  }
+
+```
+
+
+## Options for writing captions in RMarkdown
+
+### HTML
+
+* Write a custom _hook_ as explained [here](https://github.com/yihui/knitr-examples/blob/master/063-html5-figure.Rmd).
+* Use the [captioner package](https://github.com/adletaw/captioner/blob/master/vignettes/using_captioner.Rmd) (easier and more flexible!)
+
+
+```{r}
+library(captioner)
+figure_nums = captioner(prefix = "Figure")
+table_nums = captioner(prefix = "Table")
+```
+
+```{r}
+plot(iris)
+```
+_`r figure_nums(name = "iris", caption = "Edgar Anderson's iris data.  All measurements are in centimetres.")`_
+
+Then you can refer to a figure in the text with `r figure_nums("iris", display = "cite")`.
+
+```{r, results='asis'}
+library(xtable)
+print(xtable(head(iris)),type = "html", include.rownames = F, align="center")
+```
+_`r table_nums(name = "iris", caption = "Edgar Anderson's iris data.  All measurements are in centimetres.")`_
+
+
+See the data in `r table_nums("iris", display = "cite")`.
+
+### PDF
+
+Uses LaTeX to compile the document as explained [here](http://rmarkdown.rstudio.com/pdf_document_format.html).  
+
+* Use `fig_caption: true` in the YAML header
+* Use `fig.cap="your caption here"` in code chunk
+
+Or use `captioner` as with HTML.
+
+
+
+## Tables of regression models
+
+```{r,message=F}
+library(texreg)
+```
+
+```{r, messages=F, warning=F, results='asis'}
+lm1=lm(rnorm(10)~rnorm(10))
+## Xtable
+print(xtable(lm1),type="html")
+
+## HTMLreg
+htmlreg(lm1,caption = "")
+```
+_`r table_nums(name = "r1", caption = "Regression of random variables")`_
+
+## Rcpp
+
+Compiling and calling functions written in C++ from R using the [`Rcpp` package](http://www.rcpp.org).  
+
+## GGplot themes 
+
+You can set the default themes for ggplot figures like this:
+```{r}
+library(ggplot2)
+presentation_theme <- theme_grey()+
+  theme(text = element_text(size = 25, colour = "black"))
+theme_set(presentation_theme)
+```
+Then all ggplot plots will use those defaults.
+
+# Data
+
+## Historical climate data
+
+Check out the `prism` package for gridded time series of historical US weather: https://github.com/ropensci/prism
